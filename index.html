@@ -2,1786 +2,767 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Money Pro</title>
-    
-    <!-- AdsGram Ad Script -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-    
-    <!-- Monetag Ad Zones -->
-    <script src='//libtl.com/sdk.js' data-zone='9730885' data-sdk='show_9730885'></script>
-    <script src='//libtl.com/sdk.js' data-zone='9500387' data-sdk='show_9500387'></script>
-    <script src='//libtl.com/sdk.js' data-zone='9715370' data-sdk='show_9715370'></script>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- Font Awesome for Icons -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>ভিডিও পোর্টাল - টেলিগ্রাম মিনি অ্যাপ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
+    <!-- ======================= টেলিগ্রাম ওয়েব অ্যাপ SDK ======================= -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- ======================= এডসগ্রাম SDK ======================= -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    
     <style>
-        body { 
-            font-family: 'Hind Siliguri', sans-serif; 
-            background-color: #ffffff; 
-            color: #1e293b; 
-            transition: background-color 0.3s, color 0.3s;
-            padding-bottom: 70px;
-        }
-        .dark-mode {
-            background-color: #1e293b;
-            color: #f1f5f9;
-        }
-        .dark-bg { background-color: #f8fafc; }
-        .dark-mode .dark-bg { background-color: #334155; }
-        .card-bg { 
-            background-color: #ffffff; 
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        }
-        .dark-mode .card-bg {
-            background-color: #475569;
-            border-color: #64748b;
-            color: #f1f5f9;
-        }
-        .border-accent { border-color: #ff8c00; }
-        .text-accent { color: #ff8c00; }
-        .btn, .btn-accent, .btn-outline-accent { 
-            transition: all 0.2s ease-in-out; 
-            transform: scale(1); 
-        }
-        .btn:active, .btn-accent:active, .btn-outline-accent:active { 
-            transform: scale(0.95); 
-        }
-        .btn-accent { 
-            background-color: #ff8c00; 
-            color: #ffffff; 
-            font-weight: bold; 
-        }
-        .btn-accent:hover { 
-            background-color: #e67e00; 
-        }
-        .btn-outline-accent { 
-            border: 1px solid #ff8c00; 
-            color: #ff8c00; 
-        }
-        .btn-outline-accent:hover { 
-            background-color: #ff8c00; 
-            color: #ffffff; 
-        }
-        .input-field { 
-            background-color: #f9fafb; 
-            border: 1px solid #e5e7eb; 
-            color: #1e293b;
-        }
-        .dark-mode .input-field {
-            background-color: #475569;
-            border-color: #64748b;
-            color: #f1f5f9;
-        }
-        .input-field::placeholder {
-            color: #9ca3af;
-        }
-        .dark-mode .input-field::placeholder {
-            color: #94a3b8;
-        }
-        .main-page { display: none; }
-        .main-page.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
-        .sub-page { display: none; }
-        .sub-page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
-        .bottom-nav a.active { color: #ff8c00; }
-        .dark-mode .bottom-nav {
-            background-color: #475569;
-            border-color: #64748b;
-        }
-        .notification-dot {
-            position: absolute; top: -2px; right: -2px; width: 10px; height: 10px;
-            background-color: #ef4444; border-radius: 50%; border: 2px solid #ffffff; display: none;
-        }
-        .timer { 
-            background-color: #ff8c00; 
-            color: #ffffff; 
-            padding: 2px 6px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-            font-weight: bold;
-            margin-left: 5px;
-        }
-        .pending { 
-            background-color: #f59e0b; 
-            color: white; 
-            padding: 2px 6px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-            font-weight: bold;
-            margin-left: 5px;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .social-button {
-            transition: all 0.3s ease;
-        }
-        .social-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        .dark-mode-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1e293b;
-            transition: color 0.3s;
-        }
-        .dark-mode .dark-mode-toggle {
-            color: #f1f5f9;
-        }
-        .dark-mode .text-slate-800 {
-            color: #f1f5f9;
-        }
-        .dark-mode .text-gray-600 {
-            color: #cbd5e1;
-        }
-        .dark-mode header {
-            background-color: #334155;
-            border-color: #475569;
-        }
-        .dark-mode header h1 {
-            color: #f1f5f9;
-        }
-        .dark-mode .card-bg h3,
-        .dark-mode .card-bg p {
-            color: #f1f5f9;
-        }
-        .dark-mode #custom-alert div {
-            background-color: #475569;
-            color: #f1f5f9;
-        }
-        
-        /* Support Button */
-        .support-btn {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 22px;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
-            cursor: pointer;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            border: 2px solid white;
-        }
-        
-        .support-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6);
-        }
-        
-        .support-btn i {
-            font-size: 22px;
-        }
-        
-        /* Ad Zone Indicator */
-        .ad-zone-indicator {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 2px 6px;
-            font-size: 10px;
-            margin-left: 5px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
         }
 
-        /* Cooldown Timer */
-        .cooldown-timer {
-            font-size: 12px;
-            color: #ffd700;
+        body {
+            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
+            padding: 1rem;
+            color: #f0f3fa;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .slider-section {
+            margin-bottom: 2rem;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 1.5rem;
+            padding: 1rem 0.75rem;
+            backdrop-filter: blur(2px);
+            box-shadow: 0 10px 25px -8px rgba(0,0,0,0.5);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            border-left: 5px solid #ff6a3d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title i {
+            color: #ff6a3d;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 1.2rem;
+            background: #00000055;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .carousel-slide {
+            flex: 0 0 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+        }
+
+        .thumb-video-card {
+            background: #11161f;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        .thumb-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: #0a0e16;
+            cursor: pointer;
+        }
+
+        .thumb-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .play-overlay i {
+            font-size: 3.5rem;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            transition: transform 0.2s ease;
+        }
+
+        .play-overlay:hover i {
+            transform: scale(1.1);
+            color: #ff6a3d;
+        }
+
+        .thumb-wrapper:hover .thumb-img {
+            transform: scale(1.02);
+        }
+
+        .card-info {
+            padding: 1rem;
+        }
+
+        .video-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.6rem 0.5rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-download {
+            background: #2c3e66;
+            color: white;
+            border: 1px solid #3e5a8f;
+        }
+
+        .btn-watch {
+            background: #ff6a3d;
+            color: white;
+            border: none;
+        }
+
+        .btn.locked-btn {
+            background: #4a4f5e;
+            cursor: pointer;
+            opacity: 0.7;
+            border: 1px solid #6c757d;
+            position: relative;
+        }
+
+        .btn.locked-btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn.locked-btn::after {
+            content: "🔒";
             margin-left: 5px;
+            font-size: 0.7rem;
+        }
+
+        .btn.unlocked-btn {
+            background: #2ecc71;
+            opacity: 1;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .dot {
+            width: 30px;
+            height: 4px;
+            background: #4b5563;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .dot.active {
+            background: #ff6a3d;
+            width: 40px;
+        }
+
+        .thumbnails-grid {
+            margin-top: 1.5rem;
+        }
+
+        .grid-title {
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+            border-left: 5px solid #ff6a3d;
+            padding-left: 1rem;
+        }
+
+        .grid-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .video-card {
+            background: #11161fe6;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+        }
+
+        .card-body {
+            padding: 0.9rem 1rem 1rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .professional-footer {
+            margin-top: 2.5rem;
+            background: #0c1120cc;
+            backdrop-filter: blur(8px);
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+            border-top: 1px solid #2a334a;
+        }
+
+        .copyright {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .footer-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .footer-btn {
+            background: none;
+            border: none;
+            color: #ffb347;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+            padding: 0.3rem 0.6rem;
+            border-radius: 1.5rem;
+        }
+
+        .footer-btn:hover {
+            background: #ff6a3d20;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: #12172ae6;
+            max-width: 400px;
+            width: 100%;
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            border: 1px solid #ffaa55;
+            color: #f0f3fa;
+        }
+
+        .modal-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffaa66;
+        }
+
+        .modal-content p {
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .close-modal {
+            background: #ff6a3d;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 0.8rem;
+        }
+
+        button, .btn, .dot, .footer-btn {
+            touch-action: manipulation;
         }
     </style>
 </head>
-<body class="max-w-md mx-auto">
-
-    <!-- App Loader -->
-    <div id="loader" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-orange-500"></div>
+<body>
+<div class="container">
+    <div class="slider-section">
+        <div class="section-title">
+            <i class="fas fa-film"></i> ট্রেন্ডিং ভিডিও
+        </div>
+        <div class="carousel-container">
+            <div class="carousel-track" id="carouselTrack"></div>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+        <p style="font-size:0.7rem; margin-top:10px; text-align:center; opacity:0.7;">
+            <i class="fas fa-lock"></i> প্রতিটি বাটন আলাদাভাবে আনলক করতে হবে। বাটনে ক্লিক করে বিজ্ঞাপন দেখুন।
+        </p>
     </div>
 
-    <!-- Main App Container -->
-    <div id="app-container" class="min-h-screen flex-col main-page active">
-        <header class="flex items-center justify-between p-4 sticky top-0 bg-opacity-80 backdrop-blur-md z-10 bg-white dark-bg border-b border-gray-200">
-            <h1 class="text-xl font-bold text-slate-800">Smart Money Pro</h1>
-            <div class="flex items-center space-x-4">
-                <!-- Dark Mode Toggle Button -->
-                <button id="dark-mode-toggle" class="dark-mode-toggle">
-                    <i id="dark-mode-icon" data-lucide="moon" class="w-6 h-6"></i>
-                </button>
-                <div id="notification-bell" class="relative cursor-pointer">
-                    <i data-lucide="bell" class="w-6 h-6 text-slate-800"></i>
-                    <div id="notification-dot" class="notification-dot"></div>
-                </div>
-                <i data-lucide="user" class="w-6 h-6 cursor-pointer text-slate-800" onclick="navigateTo('profile-page')"></i>
-            </div>
-        </header>
+    <div class="thumbnails-grid">
+        <div class="grid-title"><i class="fas fa-th-large"></i> Premium HUB</div>
+        <div class="grid-container" id="videoGridContainer"></div>
+    </div>
+</div>
 
-        <main class="flex-grow">
-            <!-- Home Page -->
-            <div id="home-page" class="p-4 space-y-6 sub-page active">
-                <div class="card-bg p-4 rounded-lg flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-600 text-sm">আপনার ব্যালেন্স</p>
-                        <p class="text-3xl font-bold text-slate-800">৳<span id="coin-balance">0</span></p>
-                    </div>
-                    <button id="home-withdraw-btn" class="bg-orange-500 text-white font-semibold px-6 py-2 rounded-lg">উইথড্র</button>
-                </div>
+<footer class="professional-footer">
+    <div class="copyright"><i class="far fa-copyright"></i> ২০২৬ ভিডিও পোর্টাল</div>
+    <div class="footer-buttons">
+        <button class="footer-btn" id="privacyBtn"><i class="fas fa-shield-alt"></i> প্রাইভেসি</button>
+        <button class="footer-btn" id="aboutBtn"><i class="fas fa-info-circle"></i> সম্পর্কে</button>
+    </div>
+</footer>
 
-                <section>
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h2 class="text-lg font-semibold text-slate-800">ডেইলি টাস্কস</h2>
-                            <p class="text-sm text-gray-600 mb-4">টাস্ক কমপ্লিট করে রিওয়ার্ড নিন</p>
+<div id="infoModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">প্রাইভেসি ও পলিসি</h3>
+        <div id="modalBody">
+            <p>আমরা আপনার গোপনীয়তাকে সম্মান করি। প্রতিটি বাটন আলাদাভাবে আনলক করতে হবে।</p>
+        </div>
+        <button class="close-modal">বন্ধ করুন</button>
+    </div>
+</div>
+
+<script>
+    // ======================= টেলিগ্রাম মিনি অ্যাপ ইন্সট্যান্স =======================
+    let tg = window.Telegram?.WebApp;
+    if(tg) {
+        tg.expand();
+        tg.ready();
+        console.log("টেলিগ্রাম মিনি অ্যাপ রেডি");
+    }
+    
+    // ======================= এডসগ্রাম কনফিগারেশন =======================
+    const ADSGRAM_BLOCK_ID = "int-27313";
+    
+    // ইউটিউব লিংক - প্রতিটি ভিডিওর জন্য আলাদা ইউটিউব লিংক
+    const youtubeLinks = {
+        1: "https://omg10.com/4/9722284",
+        2: "https://omg10.com/4/9722283",
+        3: "https://omg10.com/4/9809281",
+        4: "https://omg10.com/4/9722284",
+        5: "https://omg10.com/4/9722283",
+        6: "https://omg10.com/4/9809281"
+    };
+    
+    // নোটিফিকেশন দেখানোর ফাংশন
+    function showNotification(message, isSuccess = true) {
+        if(tg) {
+            tg.showAlert(message);
+        } else {
+            alert(message);
+        }
+    }
+    
+    // ======================= শুদ্ধ এডসগ্রাম বিজ্ঞাপন দেখানোর ফাংশন (কোনো রিডাইরেক্ট ছাড়া) =======================
+    async function showAdsgramAd(callbackOnComplete) {
+        // চেক করুন Adsgram SDK লোড হয়েছে কিনা
+        if (typeof Adsgram === 'undefined') {
+            console.warn("এডসগ্রাম SDK লোড হয়নি, সিমুলেশন মোড চালু হবে");
+            fallbackAdSimulation(callbackOnComplete);
+            return;
+        }
+        
+        try {
+            // Adsgram ইনিশিয়ালাইজেশন - শুধু এড দেখাবে, কোনো রিডাইরেক্ট করবে না
+            const AdController = Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+            AdController.show()
+                .then(() => {
+                    console.log('✅ Adsgram বিজ্ঞাপন সফলভাবে দেখানো হয়েছে');
+                    showNotification("✅ সফলভাবে এড সম্পন্ন হয়েছে! আপনার বাটন এখন আনলক।", true);
+                    if(callbackOnComplete) callbackOnComplete(true);
+                })
+                .catch((error) => {
+                    console.error('❌ Adsgram বিজ্ঞাপনে ত্রুটি:', error);
+                    showNotification("❌ বিজ্ঞাপন লোড হতে ত্রুটি হয়েছে! দয়া করে আবার চেষ্টা করুন।", false);
+                    if(callbackOnComplete) callbackOnComplete(false);
+                });
+        } catch(e) {
+            console.error('❌ Adsgram ইনিশিয়ালাইজেশন ত্রুটি:', e);
+            showNotification("❌ বিজ্ঞাপন সিস্টেম ত্রুটি, আবার চেষ্টা করুন।", false);
+            fallbackAdSimulation(callbackOnComplete);
+        }
+    }
+    
+    // ব্যাকআপ সিমুলেশন ফাংশন (যখন এডসগ্রাম কাজ করে না)
+    function fallbackAdSimulation(callbackOnComplete) {
+        const msg = "📢 একটি বিজ্ঞাপন দেখতে হবে এই বাটনটি আনলক করতে। 'OK' চাপলে বিজ্ঞাপন সম্পন্ন হবে (সিমুলেশন)";
+        if(tg) {
+            tg.showConfirm(msg, (confirmed) => {
+                if(confirmed) {
+                    tg.showAlert("✅ সিমুলেশন: সফলভাবে এড সম্পন্ন হয়েছে! আপনার বাটন এখন আনলক।");
+                    if(callbackOnComplete) callbackOnComplete(true);
+                } else {
+                    if(callbackOnComplete) callbackOnComplete(false);
+                }
+            });
+        } else {
+            if(confirm(msg)) {
+                alert("✅ সিমুলেশন: সফলভাবে এড সম্পন্ন হয়েছে! আপনার বাটন এখন আনলক।");
+                if(callbackOnComplete) callbackOnComplete(true);
+            } else {
+                if(callbackOnComplete) callbackOnComplete(false);
+            }
+        }
+    }
+    
+    // ======================= ভিডিও ডাটা (ইউটিউব লিংক সহ) =======================
+    const videoItems = [
+        { id:1, title:"প্রিমিয়াম ভিডিও ১", thumbUrl:"https://i.ibb.co.com/DfNDddF6/1775025414376.jpg", videoUrl: youtubeLinks[1], downloadLink: youtubeLinks[1] },
+        { id:2, title:"প্রিমিয়াম ভিডিও ২", thumbUrl:"https://i.ibb.co.com/k2RM9BDQ/1775025365581.jpg", videoUrl: youtubeLinks[2], downloadLink: youtubeLinks[2] },
+        { id:3, title:"প্রিমিয়াম ভিডিও ৩", thumbUrl:"https://i.ibb.co.com/jP2Ht8Fr/1775025373666.jpg", videoUrl: youtubeLinks[3], downloadLink: youtubeLinks[3] },
+        { id:4, title:"প্রিমিয়াম ভিডিও ৪", thumbUrl:"https://i.ibb.co.com/RTSzsPBR/1775025485987.jpg", videoUrl: youtubeLinks[4], downloadLink: youtubeLinks[4] },
+        { id:5, title:"প্রিমিয়াম ভিডিও ৫", thumbUrl:"https://i.ibb.co.com/99FQCvyr/IMG-20260409-223046.jpg", videoUrl: youtubeLinks[5], downloadLink: youtubeLinks[5] },
+        { id:6, title:"প্রিমিয়াম ভিডিও ৬", thumbUrl:"https://i.ibb.co.com/DfNDddF6/1775025414376.jpg", videoUrl: youtubeLinks[6], downloadLink: youtubeLinks[6] }
+    ];
+    
+    // পৃথক বাটন আনলক স্টেট
+    let unlockedButtons = new Map();
+    
+    function isButtonUnlocked(videoId, buttonType) {
+        return unlockedButtons.get(`${videoId}_${buttonType}`) === true;
+    }
+    
+    function unlockButton(videoId, buttonType, btnElement) {
+        unlockedButtons.set(`${videoId}_${buttonType}`, true);
+        if(btnElement) {
+            btnElement.classList.remove('locked-btn');
+            btnElement.classList.add('unlocked-btn');
+            btnElement.disabled = false;
+        }
+        document.querySelectorAll(`.btn[data-video-id="${videoId}"][data-btn-type="${buttonType}"]`).forEach(el => {
+            el.classList.remove('locked-btn');
+            el.classList.add('unlocked-btn');
+            el.disabled = false;
+        });
+    }
+    
+    function showAdAndUnlock(videoId, buttonType, btnElement, onSuccess) {
+        showAdsgramAd((success) => {
+            if(success) {
+                unlockButton(videoId, buttonType, btnElement);
+                if(onSuccess) onSuccess();
+            }
+        });
+    }
+    
+    // ডাউনলোড ফাংশন - ইউটিউব লিংক খুলবে
+    function performDownload(link, videoId, btnElement) {
+        if(isButtonUnlocked(videoId, 'download')) {
+            if(link) {
+                window.open(link, '_blank');
+            } else {
+                const msg = "লিংক নেই!";
+                if(tg) tg.showAlert(msg);
+                else alert(msg);
+            }
+        } else {
+            showAdAndUnlock(videoId, 'download', btnElement, () => {
+                if(link) {
+                    window.open(link, '_blank');
+                }
+            });
+        }
+    }
+    
+    // ওয়াচ ফাংশন - ইউটিউব লিংক খুলবে
+    function performWatch(videoUrl, videoId, btnElement) {
+        if(isButtonUnlocked(videoId, 'watch')) {
+            if(videoUrl) {
+                window.open(videoUrl, '_blank');
+            } else {
+                const msg = "ভিডিও URL নেই";
+                if(tg) tg.showAlert(msg);
+                else alert(msg);
+            }
+        } else {
+            showAdAndUnlock(videoId, 'watch', btnElement, () => {
+                if(videoUrl) window.open(videoUrl, '_blank');
+            });
+        }
+    }
+    
+    // প্লে আইকনে ক্লিক করলে - ওয়াচ বাটনের মতো কাজ করবে
+    function onPlayIconClick(videoUrl, videoId) {
+        if(isButtonUnlocked(videoId, 'watch')) {
+            if(videoUrl) window.open(videoUrl, '_blank');
+        } else {
+            showAdsgramAd((success) => {
+                if(success) {
+                    unlockButton(videoId, 'watch', null);
+                    if(videoUrl) window.open(videoUrl, '_blank');
+                }
+            });
+        }
+    }
+    
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m){
+            if(m==='&') return '&amp;';
+            if(m==='<') return '&lt;';
+            if(m==='>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // বিল্ড স্লাইডার ও গ্রিড
+    function buildCarouselAndGrid() {
+        const track = document.getElementById('carouselTrack');
+        track.innerHTML = '';
+        videoItems.forEach((item) => {
+            const downloadLocked = !isButtonUnlocked(item.id, 'download');
+            const watchLocked = !isButtonUnlocked(item.id, 'watch');
+            const slide = document.createElement('div');
+            slide.className = 'carousel-slide';
+            slide.innerHTML = `
+                <div class="thumb-video-card">
+                    <div class="thumb-wrapper" data-video-url="${item.videoUrl}" data-video-id="${item.id}">
+                        <img class="thumb-img" src="${item.thumbUrl}" alt="thumb" onerror="this.src='https://placehold.co/400x225?text=No+Image'">
+                        <div class="play-overlay">
+                            <i class="fas fa-play-circle"></i>
                         </div>
-                        <p class="text-sm text-gray-600">অ্যাডস বাকি: <span id="ads-left-count">...</span></p>
                     </div>
-                    <div class="space-y-3">
-                        <!-- Ad Button -->
-                        <div class="bg-orange-500 p-3 rounded-lg flex items-center justify-between text-white">
-                            <div class="flex items-center space-x-3">
-                                <span class="text-3xl">🤩</span>
-                                <div>
-                                    <h3 class="font-bold">অ্যাড দেখুন</h3>
-                                    <p class="text-xs font-medium">Ads- ৳10</p>
-                                </div>
-                            </div>
-                            <button id="ad-claim-btn" class="bg-white text-orange-500 font-bold px-6 py-2 rounded-lg text-sm btn">ক্লেইম</button>
-                        </div>
-                        
-                        <!-- Ad Button (New) -->
-                        <div class="bg-purple-600 p-3 rounded-lg flex items-center justify-between text-white">
-                            <div class="flex items-center space-x-3">
-                                <span class="text-3xl">🎯</span>
-                                <div>
-                                    <h3 class="font-bold">অ্যাড দেখুন</h3>
-                                    <p class="text-xs font-medium">ads- ৳10 <span id="zone-indicator" class="ad-zone-indicator">Zone 1/3</span></p>
-                                </div>
-                            </div>
-                            <button id="monetag-ad-btn" class="bg-white text-purple-600 font-bold px-6 py-2 rounded-lg text-sm btn">ক্লেইম</button>
-                        </div>
-                        
-                        <div class="bg-gradient-to-r from-purple-600 to-blue-600 p-3 rounded-lg flex items-center justify-between text-white">
-                            <div class="flex items-center space-x-3"><span class="text-3xl">💼</span><div><h3 class="font-bold">ডেইলি জবস</h3><p class="text-xs font-medium">দেখুন এবং ৳10 উপার্জন করুন</p></div></div>
-                            <button class="bg-white text-purple-600 font-bold px-6 py-2 rounded-lg text-sm btn" onclick="navigateTo('daily-jobs-page')">স্টার্ট</button>
-                        </div>
-                        
-                        <!-- Telegram Channel Button -->
-                        <div class="bg-gradient-to-r from-blue-500 to-blue-700 p-3 rounded-lg flex items-center justify-between text-white social-button">
-                            <div class="flex items-center space-x-3">
-                                <span class="text-3xl">📢</span>
-                                <div>
-                                    <h3 class="font-bold">অফিসিয়াল টেলিগ্রাম চ্যানেলে জয়েন করুন</h3>
-                                    <p class="text-xs font-medium">সব আপডেট পেতে এখনই জয়েন করুন</p>
-                                </div>
-                            </div>
-                            <button id="telegram-channel-btn" class="bg-white text-blue-600 font-bold px-6 py-2 rounded-lg text-sm btn">
-                                জয়েন করুন
+                    <div class="card-info">
+                        <div class="video-title">${escapeHtml(item.title)}</div>
+                        <div class="button-group">
+                            <button class="btn btn-download ${downloadLocked ? 'locked-btn' : 'unlocked-btn'}" data-video-id="${item.id}" data-btn-type="download" data-dl="${item.downloadLink}">
+                                <i class="fab fa-youtube"></i> ডাউনলোড
+                            </button>
+                            <button class="btn btn-watch ${watchLocked ? 'locked-btn' : 'unlocked-btn'}" data-video-id="${item.id}" data-btn-type="watch" data-watch="${item.videoUrl}">
+                                <i class="fab fa-youtube"></i> ওয়াচ নাও
                             </button>
                         </div>
                     </div>
-                </section>
-            </div>
-
-            <!-- Wallet Page -->
-            <div id="wallet-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center text-slate-800">আমার ওয়ালেট</h2>
-                <div class="card-bg p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3 text-slate-800">উপার্জন উত্তোলন</h3>
-                    <p class="text-sm text-gray-600 mb-1">বর্তমান ব্যালেন্স: <span class="font-bold text-accent">৳<span id="wallet-coin-balance">0</span></span></p>
-                    <p class="text-sm text-gray-600 mb-2">সর্বনিম্ন উত্তোলন: ৳<span id="min-withdrawal-info">2000</span></p>
-                    
-                    <input id="withdraw-amount" type="number" placeholder="টাকার পরিমাণ লিখুন" class="w-full p-3 rounded-lg input-field mb-3">
-                    <select id="withdraw-method" class="w-full p-3 rounded-lg input-field mb-3">
-                        <option value="">পদ্ধতি নির্বাচন করুন</option>
-                        <option value="Bkash">বিকাশ</option>
-                        <option value="Nagad">নগদ</option>
-                        <option value="Rocket">রকেট</option>
-                        <option value="Bank">ব্যাংক</option>
-                    </select>
-                    <div id="payment-details-container"></div>
-                    <button id="withdraw-btn" class="w-full p-3 rounded-lg btn-accent mt-3">উত্তোলন রিকোয়েস্ট</button>
                 </div>
-                <div>
-                    <h3 class="text-lg font-semibold mb-3 text-slate-800">উত্তোলন ইতিহাস</h3>
-                    <div id="withdrawal-history-list" class="space-y-3"></div>
-                </div>
-            </div>
-
-            <!-- Profile Page -->
-            <div id="profile-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center mb-4 text-slate-800">প্রোফাইল</h2>
-                <div class="flex flex-col items-center">
-                    <img id="profile-photo" src="https://placehold.co/100x100/1e1e1e/ff8c00?text=U" class="rounded-full mb-2">
-                    <h2 id="profile-name" class="text-xl font-bold text-slate-800">ইউজারের নাম</h2>
-                    <p id="profile-username" class="text-gray-600">@username</p>
-                </div>
-                <div class="card-bg p-4 rounded-lg mt-4">
-                    <h3 class="font-semibold mb-2 text-slate-800">অ্যাকাউন্ট তথ্য</h3>
-                    <div class="flex justify-between mb-1">
-                        <span class="text-gray-600">জয়েন করেছেন:</span>
-                        <span id="joined-via" class="text-slate-800">Telegram</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">ইউজার আইডি:</span>
-                        <span id="profile-user-id" class="text-slate-800">123456</span>
-                    </div>
-                </div>
-                <!-- Admin panel access button for admin users -->
-                <div id="admin-access" class="hidden">
-                    <button onclick="navigateTo('admin-panel')" class="w-full p-3 rounded-lg bg-purple-600 text-white font-bold mb-3">Admin Panel</button>
-                </div>
-            </div>
-            
-            <!-- Notifications Page -->
-            <div id="notifications-page" class="p-4 space-y-4 sub-page">
-                <h2 class="text-xl font-bold text-center text-slate-800">ইনবক্স</h2>
-                <div id="notifications-list" class="space-y-3"></div>
-            </div>
-
-            <!-- Daily Jobs Page -->
-            <div id="daily-jobs-page" class="p-4 space-y-6 sub-page">
-                <div class="flex items-center justify-between mb-4">
-                    <button onclick="navigateTo('home-page')" class="flex items-center text-gray-600 hover:text-slate-800">
-                        <i data-lucide="arrow-left" class="w-5 h-5 mr-2"></i>
-                        পিছনে
-                    </button>
-                    <h2 class="text-xl font-bold text-slate-800">ডেইলি জবস</h2>
-                    <div></div>
-                </div>
-                
-                <div class="card-bg p-4 rounded-lg text-center">
-                    <h3 class="text-lg font-semibold mb-2 text-slate-800"> দেখুন এবং আর্ন করুন</h3>
-                    <p class="text-gray-600 text-sm mb-4">নিচের যেকোনো জবে ক্লিক করুন, 15 সেকেন্ডের জন্য অ্যাড দেখুন এবং ৳10 আর্ন করুন!</p>
-                    <div class="flex items-center justify-center space-x-4 text-sm">
-                        <div class="flex items-center">
-                            <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
-                            <span class="text-slate-800">অ্যাভেইলেবল</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
-                            <span class="text-slate-800">কুলডাউন</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="daily-jobs-container" class="space-y-3">
-                    <!-- Job buttons will be dynamically generated here -->
-                </div>
-            </div>
-
-            <!-- Admin Panel Page -->
-            <div id="admin-panel" class="p-4 space-y-6 sub-page">
-                <div class="flex items-center justify-between mb-4">
-                    <button onclick="navigateTo('profile-page')" class="flex items-center text-gray-600 hover:text-slate-800">
-                        <i data-lucide="arrow-left" class="w-5 h-5 mr-2"></i>
-                        পিছনে
-                    </button>
-                    <h2 class="text-xl font-bold text-slate-800">এডমিন প্যানেল</h2>
-                    <div></div>
-                </div>
-                
-                <div class="card-bg p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3 text-slate-800">বোনাস ডিস্ট্রিবিউশন</h3>
-                    <input id="bonus-amount" type="number" placeholder="বোনাস পরিমাণ লিখুন" class="w-full p-3 rounded-lg input-field mb-3">
-                    <button id="send-bonus-btn" class="w-full p-3 rounded-lg bg-green-600 text-white font-bold">সকল ইউজারকে বোনাস দিন</button>
-                </div>
-
-                <!-- Ad Zone Stats -->
-                <div class="card-bg p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3 text-slate-800">জোন স্ট্যাটাস</h3>
-                    <div id="zone-stats" class="space-y-2 text-sm">
-                        <div class="flex justify-between">
-                            <span>জোন 1 (9730885):</span>
-                            <span id="zone1-status">✅ Active</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>জোন 2 (9500387):</span>
-                            <span id="zone2-status">✅ Active</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>জোন 3 (9715370):</span>
-                            <span id="zone3-status">✅ Active</span>
-                        </div>
-                        <div class="flex justify-between mt-2 pt-2 border-t border-gray-200">
-                            <span class="font-semibold">আজ দেখা হয়েছে:</span>
-                            <span id="today-monetag-count">0/30</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-semibold">আজ দেখা হয়েছে:</span>
-                            <span id="today-adsgram-count">0/10</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Manual Report Button -->
-                <div class="card-bg p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3 text-slate-800">রিপোর্ট</h3>
-                    <button id="send-manual-report" class="w-full p-3 rounded-lg bg-purple-600 text-white font-bold mb-3">
-                        <i class="fas fa-paper-plane mr-2"></i> ম্যানুয়াল রিপোর্ট পাঠান
-                    </button>
-                    <p class="text-xs text-gray-600">প্রতি ১ ঘন্টা পর পর স্বয়ংক্রিয় রিপোর্ট যায়</p>
-                </div>
-            </div>
-        </main>
-
-        <nav class="bottom-nav sticky bottom-0 grid grid-cols-3 items-center text-center py-2 card-bg border-t border-gray-200">
-            <a href="#" class="nav-link active" data-page="home-page"><i data-lucide="home" class="mx-auto w-6 h-6"></i><span class="text-xs text-slate-800">হোম</span></a>
-            <a href="#" class="nav-link" data-page="wallet-page"><i data-lucide="wallet" class="mx-auto w-6 h-6"></i><span class="text-xs text-slate-800">ওয়ালেট</span></a>
-            <a href="#" class="nav-link" data-page="daily-jobs-page"><i data-lucide="briefcase" class="mx-auto w-6 h-6"></i><span class="text-xs text-slate-800">ডেইলি জবস</span></a>
-        </nav>
-    </div>
-    
-    <!-- Support Button -->
-    <div class="support-btn" id="support-btn" onclick="openSupportPage()">
-        <i class="fas fa-headset"></i>
-    </div>
-
-    <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg p-6 w-full max-w-sm text-center">
-            <p id="alert-message" class="mb-4 text-slate-800"></p>
-            <button id="alert-ok-btn" class="btn-accent px-6 py-2 rounded-lg">ঠিক আছে</button>
-        </div>
-    </div>
-
-    <script>
-        // ==================== CONFIGURATION ====================
-        const CONFIG = {
-            app: {
-                name: "Smart Money Pro",
-                minWithdrawal: 2000,
-                dailyAdLimit: {
-                    adsgram: 3,
-                    monetag: 30
-                },
-                adReward: 10,
-                dailyJobReward: 10,
-                joiningBonus: 50
-            },
-            
-            adsgram: {
-                enabled: true,
-                blockId: "int-27313",
-                rewardAmount: 10
-            },
-            
-            monetag: {
-                enabled: true,
-                zones: ['9730885', '9500387', '9715370'],
-                rewardAmount: 10
-            },
-            
-            social: {
-                telegram: "https://t.me/+tLB334Ko71tjY2Y1"
-            },
-            
-            bot: {
-                username: "Smart_money_pro_xbot",
-                adminChatId: "7793213912",
-                reportChannelId: "-1003331749273"
-            },
-            
-            support: {
-                telegraphUrl: "https://t.me/smartmoneypro_bot",
-                telegramContact: "https://t.me/smartmoneypro_bot"
-            },
-            
-            paymentMethods: ["Bkash", "Nagad", "Rocket", "Bank"],
-            
-            dailyJobLinks: {
-                job1: "https://omg10.com/4/9717825",
-                job2: "https://omg10.com/4/9429975",
-                job3: "https://omg10.com/4/9446627",
-                job4: "https://encouragementglutton.com/vc1xew7t?key=9a97915b9241db71d8f53e974a75a975",
-                job5: "https://www.effectivegatecpm.com/hjt54qy2f?key=850e1a1f668e2f8cf8fbc7662317181b",
-                job6: "https://omg10.com/4/9717825",
-                job7: "https://omg10.com/4/10338067",
-                job8: "https://encouragementglutton.com/uaw9tkid6b?key=c49281ab14f9eb6a872d63173ea7bf9c",
-                job9: "https://omg10.com/4/9570590",
-                job10: "https://t.me/o0Uq6h5R0p80ZGE1bot?startapp",
-                job11: "https://omg10.com/4/9725607",
-                job12: "https://omg10.com/4/9429975",
-                job13: "https://www.effectivegatecpm.com/rz01szx1?key=3dfb2fe6741dd7e2c5f8969bd11701c3",
-                job14: "https://www.effectivegatecpm.com/hjt54qy2f?key=850e1a1f668e2f8cf8fbc7662317181b",
-                job15: "https://www.effectivegatecpm.com/mqb7j0cy4?key=41aca66d8ffc76b0227f65cb991591ad",
-                job16: "https://omg10.com/4/9446627",
-                job17: "https://omg10.com/4/9429975",
-                job18: "https://omg10.com/4/9717825",
-                job19: "https://omg10.com/4/9717825",
-                job20: "https://omg10.com/4/9446627"
-            }
-        };
-
-        // ==================== APPLICATION VARIABLES ====================
-        let currentUser = null;
-        let userData = null;
-        let currentJobTracking = null;
-        
-        // AdsGram variables
-        let isAdsGramShowing = false;
-        let adsGramReady = false;
-        let adsGramCount = 0;
-        let AdController = null;
-        
-        // Monetag variables
-        let isMonetagShowing = false;
-        let monetagReady = false;
-        let monetagCount = 0;
-        let currentZoneIndex = 0;
-        
-        // Statistics variables
-        let dailyStats = {
-            date: new Date().toISOString().split('T')[0],
-            newUsers: 0,
-            totalUsers: 0,
-            adsGramWatched: 0,
-            monetagWatched: 0,
-            jobsCompleted: 0,
-            totalWithdrawals: 0,
-            totalWithdrawalAmount: 0,
-            zoneStats: {
-                '9730885': 0,
-                '9500387': 0,
-                '9715370': 0
-            }
-        };
-
-        const tg = window.Telegram.WebApp;
-
-        // ==================== SUPPORT PAGE FUNCTION ====================
-        window.openSupportPage = function() {
-            tg.openLink(CONFIG.support.telegraphUrl);
-        };
-
-        // ==================== LOAD USER FROM STORAGE ====================
-        function loadUserFromStorage(userId) {
-            const storageKey = `user_${userId}`;
-            const storedData = localStorage.getItem(storageKey);
-            
-            if (storedData) {
-                try {
-                    const parsedData = JSON.parse(storedData);
-                    console.log('✅ User data loaded from storage:', parsedData);
-                    return parsedData;
-                } catch (e) {
-                    console.error('Error parsing user data:', e);
-                    return null;
-                }
-            }
-            console.log('No existing user data found for:', userId);
-            return null;
-        }
-
-        function saveUserToStorage(userData) {
-            if (!currentUser) return;
-            const storageKey = `user_${currentUser.id}`;
-            localStorage.setItem(storageKey, JSON.stringify(userData));
-            console.log('💾 User data saved to storage:', userData);
-        }
-
-        function loadWithdrawalsFromStorage(userId) {
-            const storageKey = `withdrawals_${userId}`;
-            const stored = localStorage.getItem(storageKey);
-            return stored ? JSON.parse(stored) : [];
-        }
-
-        function saveWithdrawalToStorage(userId, withdrawal) {
-            const storageKey = `withdrawals_${userId}`;
-            const withdrawals = loadWithdrawalsFromStorage(userId);
-            withdrawals.push(withdrawal);
-            localStorage.setItem(storageKey, JSON.stringify(withdrawals));
-            
-            if (dailyStats) {
-                dailyStats.totalWithdrawals++;
-                dailyStats.totalWithdrawalAmount += withdrawal.amount;
-                saveDailyStats();
-            }
-        }
-
-        function loadDailyJobsFromStorage(userId) {
-            const storageKey = `daily_jobs_${userId}`;
-            const stored = localStorage.getItem(storageKey);
-            return stored ? JSON.parse(stored) : [];
-        }
-
-        function saveDailyJobToStorage(userId, jobData) {
-            const storageKey = `daily_jobs_${userId}`;
-            const jobs = loadDailyJobsFromStorage(userId);
-            jobs.push(jobData);
-            localStorage.setItem(storageKey, JSON.stringify(jobs));
-        }
-
-        // ==================== STATISTICS FUNCTIONS ====================
-
-        function loadDailyStats() {
-            const today = new Date().toISOString().split('T')[0];
-            const statsKey = `stats_${today}`;
-            const savedStats = localStorage.getItem(statsKey);
-            
-            if (savedStats) {
-                dailyStats = JSON.parse(savedStats);
-            } else {
-                let totalUsers = 0;
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && key.startsWith('user_')) {
-                        totalUsers++;
-                    }
-                }
-                
-                dailyStats = {
-                    date: today,
-                    newUsers: 0,
-                    totalUsers: totalUsers,
-                    adsGramWatched: 0,
-                    monetagWatched: 0,
-                    jobsCompleted: 0,
-                    totalWithdrawals: 0,
-                    totalWithdrawalAmount: 0,
-                    zoneStats: {
-                        '9730885': 0,
-                        '9500387': 0,
-                        '9715370': 0
-                    }
-                };
-            }
-            
-            saveDailyStats();
-        }
-
-        function saveDailyStats() {
-            const statsKey = `stats_${dailyStats.date}`;
-            localStorage.setItem(statsKey, JSON.stringify(dailyStats));
-        }
-
-        function incrementStat(statName) {
-            if (dailyStats) {
-                dailyStats[statName] = (dailyStats[statName] || 0) + 1;
-                
-                let totalUsers = 0;
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && key.startsWith('user_')) {
-                        totalUsers++;
-                    }
-                }
-                dailyStats.totalUsers = totalUsers;
-                
-                saveDailyStats();
-            }
-        }
-
-        function incrementZoneStat(zoneId) {
-            if (dailyStats && dailyStats.zoneStats) {
-                dailyStats.zoneStats[zoneId] = (dailyStats.zoneStats[zoneId] || 0) + 1;
-                saveDailyStats();
-            }
-        }
-
-        // ==================== AUTO REPORT FUNCTION ====================
-
-        async function sendReportToChannel() {
-            const reportChannelId = CONFIG.bot.reportChannelId;
-            if (!reportChannelId) {
-                console.log('No report channel configured');
-                return;
-            }
-
-            const today = new Date();
-            const timeStr = today.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
-            const dateStr = today.toLocaleDateString('bn-BD');
-
-            let todayNewUsers = 0;
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith('user_')) {
-                    const user = JSON.parse(localStorage.getItem(key));
-                    if (user.createdAt && user.createdAt.startsWith(today.toISOString().split('T')[0])) {
-                        todayNewUsers++;
-                    }
-                }
-            }
-
-            const zone1Count = dailyStats?.zoneStats?.['9730885'] || 0;
-            const zone2Count = dailyStats?.zoneStats?.['9500387'] || 0;
-            const zone3Count = dailyStats?.zoneStats?.['9715370'] || 0;
-
-            const reportMessage = `
-📊 <b>স্মার্ট মানি প্রো - লাইভ রিপোর্ট</b>
-📅 তারিখ: ${dateStr} | ⏰ সময়: ${timeStr}
-
-━━━━━━━━━━━━━━━━━━━
-
-👥 <b>ইউজার পরিসংখ্যান:</b>
-├ মোট ইউজার: ${dailyStats?.totalUsers || 0} জন
-├ আজকে জয়েন করেছেন: ${todayNewUsers} জন
-└ সক্রিয় ইউজার: ${Math.floor((dailyStats?.totalUsers || 0) * 0.6)} জন
-
-📈 <b>আজকের অ্যাক্টিভিটি:</b>
-├ AdsGram এড দেখা: ${dailyStats?.adsGramWatched || 0}/১০ টি
-├ Monetag এড দেখা: ${dailyStats?.monetagWatched || 0}/৩০ টি
-│  ├ জোন ১ (9730885): ${zone1Count} টি
-│  ├ জোন ২ (9500387): ${zone2Count} টি
-│  └ জোন ৩ (9715370): ${zone3Count} টি
-├ ডেইলি জব সম্পন্ন: ${dailyStats?.jobsCompleted || 0} টি
-└ মোট উইথড্র: ${dailyStats?.totalWithdrawals || 0} টি (${dailyStats?.totalWithdrawalAmount || 0} টাকা)
-
-💰 <b>আর্থিক পরিসংখ্যান:</b>
-├ আজকের পেমেন্ট: ${dailyStats?.totalWithdrawalAmount || 0} টাকা
-└ মোট উপার্জন: ${calculateTotalEarnings()} টাকা
-
-━━━━━━━━━━━━━━━━━━━
-🔔 পরবর্তী রিপোর্ট: ১ ঘন্টা পর
-🤖 <b>স্মার্ট মানি প্রো - আয়ের নতুন ঠিকানা</b>
             `;
-
-            try {
-                const botToken = '7793213912:AAFvPB1DZ8nrkUzXpwZPeXxplw6BNrirPxs';
-                const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-                
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: reportChannelId,
-                        text: reportMessage,
-                        parse_mode: 'HTML'
-                    })
-                });
-                
-                const data = await response.json();
-                if (data.ok) {
-                    console.log('Report sent successfully');
-                } else {
-                    console.error('Failed to send report:', data);
-                }
-            } catch (error) {
-                console.error('Error sending report:', error);
-            }
-        }
-
-        function calculateTotalEarnings() {
-            let total = 0;
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith('user_')) {
-                    const user = JSON.parse(localStorage.getItem(key));
-                    total += user.balance || 0;
-                }
-            }
-            return total;
-        }
-
-        function startAutoReport() {
-            setTimeout(() => sendReportToChannel(), 5000);
-            setInterval(() => sendReportToChannel(), 60 * 60 * 1000);
-        }
-
-        // ==================== ADSGRAM AD SYSTEM ====================
-
-        function initializeAdsGram() {
-            console.log('🔧 Initializing AdsGram...');
-            
-            if (!CONFIG.adsgram.enabled) {
-                console.log('⚠️ AdsGram is disabled');
-                return;
-            }
-
-            try {
-                if (typeof window.Adsgram !== 'undefined' && window.Adsgram) {
-                    AdController = window.Adsgram.init({ 
-                        blockId: CONFIG.adsgram.blockId 
-                    });
-                    
-                    if (AdController) {
-                        adsGramReady = true;
-                        console.log('✅ AdsGram initialized successfully');
-                        const adBtn = document.getElementById('ad-claim-btn');
-                        if (adBtn) adBtn.disabled = false;
-                    } else {
-                        console.log('⚠️ AdController is null');
-                        setTimeout(initializeAdsGram, 2000);
-                    }
-                } else {
-                    console.log('⚠️ AdsGram not loaded yet, retrying...');
-                    setTimeout(initializeAdsGram, 2000);
-                }
-            } catch (error) {
-                console.error('❌ AdsGram initialization error:', error);
-                setTimeout(initializeAdsGram, 3000);
-            }
-        }
-
-        async function claimAdsGramReward() {
-            if (!adsGramReady) {
-                showAlert("সিস্টেম প্রস্তুত হচ্ছে... কিছুক্ষণ পর আবার চেষ্টা করুন।");
-                return;
-            }
-
-            if (isAdsGramShowing) {
-                showAlert("অ্যাড ইতিমধ্যেই চলছে... দয়া করে অপেক্ষা করুন।");
-                return;
-            }
-
-            const today = new Date().toISOString().split('T')[0];
-
-            if (adsGramCount >= CONFIG.app.dailyAdLimit.adsgram) {
-                const now = new Date();
-                const tomorrow = new Date(now);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                tomorrow.setHours(0, 0, 0, 0);
-                
-                const timeUntilReset = tomorrow - now;
-                const hours = Math.floor(timeUntilReset / (1000 * 60 * 60));
-                const minutes = Math.floor((timeUntilReset % (1000 * 60 * 60)) / (1000 * 60));
-                
-                return showAlert(`আজকের জন্য আপনার অ্যাড দেখার সীমা শেষ হয়েছে (${adsGramCount}/10)। আবার দেখতে পারবেন ${hours} ঘন্টা ${minutes} মিনিট পর।`);
-            }
-            
-            isAdsGramShowing = true;
-            const adClaimBtn = document.getElementById('ad-claim-btn');
-            if (adClaimBtn) {
-                adClaimBtn.classList.add('btn-loading');
-                adClaimBtn.textContent = 'অ্যাড চলছে...';
-                adClaimBtn.disabled = true;
-            }
-            
-            try {
-                showAlert("অ্যাড লোড হচ্ছে... দয়া করে অপেক্ষা করুন.");
-                
-                if (AdController) {
-                    const result = await AdController.show();
-                    console.log('✅ Ad completed successfully:', result);
-                    
-                    adsGramCount++;
-                    
-                    userData.adsGramCount = adsGramCount;
-                    userData.lastAdsGramDate = today;
-                    userData.balance = (userData.balance || 0) + CONFIG.app.adReward;
-                    
-                    incrementStat('adsGramWatched');
-                    
-                    saveUserToStorage(userData);
-                    
-                    showAlert(`🎉 অভিনন্দন! আপনি ৳${CONFIG.app.adReward} উপার্জন করেছেন। (${adsGramCount}/${CONFIG.app.dailyAdLimit.adsgram})`);
-                    
-                    updateUI();
-                    updateAdCounts();
-                } else {
-                    throw new Error('AdController not initialized properly');
-                }
-                
-            } catch (error) {
-                console.error('❌ AdsGram error:', error);
-                showAlert("অ্যাড প্রদর্শনে সমস্যা হয়েছে। পরে আবার চেষ্টা করুন।");
-            } finally {
-                isAdsGramShowing = false;
-                if (adClaimBtn) {
-                    adClaimBtn.classList.remove('btn-loading');
-                    adClaimBtn.textContent = 'ক্লেইম';
-                    adClaimBtn.disabled = false;
-                }
-            }
-        }
-
-        // ==================== MONETAG AD SYSTEM ====================
-
-        function initializeMonetag() {
-            console.log('🔧 Initializing Monetag Ad System...');
-            
-            if (!CONFIG.monetag.enabled) {
-                console.log('⚠️ Monetag is disabled');
-                return;
-            }
-
-            let availableZones = 0;
-            CONFIG.monetag.zones.forEach(zone => {
-                const adFuncName = `show_${zone}`;
-                if (typeof window[adFuncName] === 'function') {
-                    console.log(`✅ Zone ${zone} is ready`);
-                    availableZones++;
-                } else {
-                    console.log(`❌ Zone ${zone} not ready yet`);
-                }
-            });
-
-            if (availableZones > 0) {
-                monetagReady = true;
-                console.log(`✅ Monetag System Ready - ${availableZones}/3 zones available`);
-                const monetagBtn = document.getElementById('monetag-ad-btn');
-                if (monetagBtn) monetagBtn.disabled = false;
-                updateZoneStatus();
-            } else {
-                console.log('⚠️ No zones ready, retrying...');
-                setTimeout(initializeMonetag, 3000);
-            }
-        }
-
-        function updateZoneStatus() {
-            const zone1 = document.getElementById('zone1-status');
-            const zone2 = document.getElementById('zone2-status');
-            const zone3 = document.getElementById('zone3-status');
-            const todayMonetag = document.getElementById('today-monetag-count');
-            const todayAdsGram = document.getElementById('today-adsgram-count');
-            
-            if (zone1) {
-                zone1.textContent = typeof window.show_9730885 === 'function' ? '✅ Active' : '❌ Inactive';
-            }
-            if (zone2) {
-                zone2.textContent = typeof window.show_9500387 === 'function' ? '✅ Active' : '❌ Inactive';
-            }
-            if (zone3) {
-                zone3.textContent = typeof window.show_9715370 === 'function' ? '✅ Active' : '❌ Inactive';
-            }
-            if (todayMonetag) {
-                todayMonetag.textContent = `${monetagCount}/${CONFIG.app.dailyAdLimit.monetag}`;
-            }
-            if (todayAdsGram) {
-                todayAdsGram.textContent = `${adsGramCount}/${CONFIG.app.dailyAdLimit.adsgram}`;
-            }
-            
-            const zoneIndicator = document.getElementById('zone-indicator');
-            if (zoneIndicator) {
-                const zoneNumber = currentZoneIndex + 1;
-                zoneIndicator.textContent = `Zone ${zoneNumber}/3`;
-            }
-        }
-
-        async function claimMonetagReward() {
-            if (!monetagReady) {
-                showAlert("সিস্টেম প্রস্তুত হচ্ছে... কিছুক্ষণ পর আবার চেষ্টা করুন।");
-                return;
-            }
-
-            if (isMonetagShowing) {
-                showAlert("অ্যাড ইতিমধ্যেই চলছে... দয়া করে অপেক্ষা করুন।");
-                return;
-            }
-
-            const today = new Date().toISOString().split('T')[0];
-
-            if (monetagCount >= CONFIG.app.dailyAdLimit.monetag) {
-                const now = new Date();
-                const tomorrow = new Date(now);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                tomorrow.setHours(0, 0, 0, 0);
-                
-                const timeUntilReset = tomorrow - now;
-                const hours = Math.floor(timeUntilReset / (1000 * 60 * 60));
-                const minutes = Math.floor((timeUntilReset % (1000 * 60 * 60)) / (1000 * 60));
-                
-                return showAlert(`আজকের জন্য আপনার অ্যাড দেখার সীমা শেষ হয়েছে (${monetagCount}/30)। আবার দেখতে পারবেন ${hours} ঘন্টা ${minutes} মিনিট পর।`);
-            }
-            
-            isMonetagShowing = true;
-            const monetagBtn = document.getElementById('monetag-ad-btn');
-            if (monetagBtn) {
-                monetagBtn.classList.add('btn-loading');
-                monetagBtn.textContent = 'অ্যাড চলছে...';
-                monetagBtn.disabled = true;
-            }
-            
-            const currentZone = CONFIG.monetag.zones[currentZoneIndex];
-            const adFunction = `show_${currentZone}`;
-            
-            const zoneIndicator = document.getElementById('zone-indicator');
-            if (zoneIndicator) {
-                zoneIndicator.textContent = `Zone ${currentZoneIndex + 1}/3`;
-            }
-            
-            try {
-                showAlert(`অ্যাড লোড হচ্ছে (Zone ${currentZoneIndex + 1}/3)... দয়া করে অপেক্ষা করুন।`);
-                
-                if (typeof window[adFunction] === 'function') {
-                    console.log(`Showing ad from zone: ${currentZone}`);
-                    await window[adFunction]();
-                    
-                    console.log(`✅ Ad from zone ${currentZone} completed successfully`);
-                    
-                    monetagCount++;
-                    currentZoneIndex = (currentZoneIndex + 1) % CONFIG.monetag.zones.length;
-                    
-                    userData.monetagCount = monetagCount;
-                    userData.lastMonetagDate = today;
-                    userData.balance = (userData.balance || 0) + CONFIG.app.adReward;
-                    userData.currentZoneIndex = currentZoneIndex;
-                    
-                    incrementStat('monetagWatched');
-                    incrementZoneStat(currentZone);
-                    
-                    saveUserToStorage(userData);
-                    
-                    const remainingAds = CONFIG.app.dailyAdLimit.monetag - monetagCount;
-                    showAlert(`🎉 অভিনন্দন! আপনি ৳${CONFIG.app.adReward} উপার্জন করেছেন। (${monetagCount}/${CONFIG.app.dailyAdLimit.monetag})`);
-                    
-                    updateUI();
-                    updateAdCounts();
-                    updateZoneStatus();
-                    
-                } else {
-                    throw new Error(`Ad function ${adFunction} not available`);
-                }
-                
-            } catch (error) {
-                console.error('❌ Monetag error:', error);
-                
-                let fallbackSuccess = false;
-                for (const zone of CONFIG.monetag.zones) {
-                    if (zone !== currentZone) {
-                        const fallbackFunction = `show_${zone}`;
-                        if (typeof window[fallbackFunction] === 'function') {
-                            try {
-                                console.log(`Trying fallback zone: ${zone}`);
-                                await window[fallbackFunction]();
-                                
-                                monetagCount++;
-                                userData.monetagCount = monetagCount;
-                                userData.lastMonetagDate = today;
-                                userData.balance = (userData.balance || 0) + CONFIG.app.adReward;
-                                
-                                incrementStat('monetagWatched');
-                                incrementZoneStat(zone);
-                                
-                                saveUserToStorage(userData);
-                                
-                                showAlert(`🎉 অভিনন্দন! আপনি ৳${CONFIG.app.adReward} উপার্জন করেছেন। (${monetagCount}/${CONFIG.app.dailyAdLimit.monetag})`);
-                                
-                                updateUI();
-                                updateAdCounts();
-                                updateZoneStatus();
-                                
-                                fallbackSuccess = true;
-                                break;
-                            } catch (e) {
-                                console.log(`Fallback zone ${zone} also failed`);
-                            }
-                        }
-                    }
-                }
-                
-                if (!fallbackSuccess) {
-                    showAlert("অ্যাড প্রদর্শনে সমস্যা হয়েছে। আপনার মোবাইলে এড ব্লকার অথবা DNS চালু আছে। অ্যাড ব্লকার বন্ধ করে আবার চেষ্টা করুন।");
-                }
-            } finally {
-                isMonetagShowing = false;
-                if (monetagBtn) {
-                    monetagBtn.classList.remove('btn-loading');
-                    monetagBtn.textContent = 'ক্লেইম';
-                    monetagBtn.disabled = false;
-                }
-            }
-        }
-
-        // ==================== CORE APPLICATION FUNCTIONS ====================
-
-        function initializeDarkMode() {
-            const darkModeToggle = document.getElementById('dark-mode-toggle');
-            const darkModeIcon = document.getElementById('dark-mode-icon');
-            const body = document.body;
-            
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            
-            if (savedTheme === 'dark') {
-                body.classList.add('dark-mode');
-                if (darkModeIcon) darkModeIcon.setAttribute('data-lucide', 'sun');
-            } else {
-                body.classList.remove('dark-mode');
-                if (darkModeIcon) darkModeIcon.setAttribute('data-lucide', 'moon');
-            }
-            
-            lucide.createIcons();
-            
-            if (darkModeToggle) {
-                darkModeToggle.addEventListener('click', () => {
-                    if (body.classList.contains('dark-mode')) {
-                        body.classList.remove('dark-mode');
-                        if (darkModeIcon) darkModeIcon.setAttribute('data-lucide', 'moon');
-                        localStorage.setItem('theme', 'light');
-                    } else {
-                        body.classList.add('dark-mode');
-                        if (darkModeIcon) darkModeIcon.setAttribute('data-lucide', 'sun');
-                        localStorage.setItem('theme', 'dark');
-                    }
-                    lucide.createIcons();
-                });
-            }
-        }
-
-        function initTelegramApp() {
-            try {
-                tg.ready();
-                tg.expand();
-                
-                const user = tg.initDataUnsafe.user;
-                if (!user) {
-                    console.error("No Telegram user data found");
-                    showAlert("টেলিগ্রাম ইউজার ডেটা লোড করতে সমস্যা হয়েছে।");
-                    return;
-                }
-                
-                currentUser = {
-                    id: user.id.toString(),
-                    firstName: user.first_name || '',
-                    lastName: user.last_name || '',
-                    username: user.username || '',
-                    photoUrl: user.photo_url || '',
-                    languageCode: user.language_code || 'bn'
-                };
-                
-                console.log('✅ Telegram User loaded:', currentUser);
-                
-                loadUserData();
-                
-            } catch (error) {
-                console.error("Error initializing Telegram app:", error);
-                showAlert("টেলিগ্রাম অ্যাপ ইনিশিয়ালাইজ করতে সমস্যা হয়েছে।");
-            }
-        }
-
-        async function loadUserData() {
-            const loader = document.getElementById('loader');
-            if (loader) loader.style.display = 'flex';
-            
-            try {
-                userData = loadUserFromStorage(currentUser.id);
-                
-                const today = new Date().toISOString().split('T')[0];
-                
-                if (!userData) {
-                    console.log('Creating new user data...');
-                    userData = {
-                        uid: currentUser.id,
-                        name: (currentUser.firstName + (currentUser.lastName ? ' ' + currentUser.lastName : '')) || 'User',
-                        username: currentUser.username || 'N/A',
-                        balance: 0,
-                        adsGramCount: 0,
-                        monetagCount: 0,
-                        lastAdsGramDate: today,
-                        lastMonetagDate: today,
-                        isBlocked: false,
-                        joinedVia: 'Telegram',
-                        currentZoneIndex: 0,
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    incrementStat('newUsers');
-                    saveUserToStorage(userData);
-                    console.log('✅ New user created with balance: 0');
-                    
-                } else {
-                    console.log('✅ Existing user loaded:', userData);
-                    
-                    if (userData.lastAdsGramDate !== today) {
-                        userData.adsGramCount = 0;
-                        userData.lastAdsGramDate = today;
-                    }
-                    
-                    if (userData.lastMonetagDate !== today) {
-                        userData.monetagCount = 0;
-                        userData.lastMonetagDate = today;
-                        userData.currentZoneIndex = 0;
-                    }
-                    
-                    adsGramCount = userData.adsGramCount || 0;
-                    monetagCount = userData.monetagCount || 0;
-                    currentZoneIndex = userData.currentZoneIndex || 0;
-                    
-                    saveUserToStorage(userData);
-                }
-                
-                updateUI();
-                checkAdminAccess();
-                navigateTo('home-page');
-                updateJobButtonStates();
-                
-                if (loader) loader.style.display = 'none';
-                
-            } catch (error) {
-                console.error("Error loading user data:", error);
-                showAlert("ইউজার ডেটা লোড করতে সমস্যা হয়েছে।");
-                if (loader) loader.style.display = 'none';
-            }
-        }
-
-        function updateUI() {
-            if (!userData) return;
-            
-            const balance = userData.balance || 0;
-            const balanceSpan = document.getElementById('coin-balance');
-            const walletBalanceSpan = document.getElementById('wallet-coin-balance');
-            const profileName = document.getElementById('profile-name');
-            const profileUsername = document.getElementById('profile-username');
-            const profilePhoto = document.getElementById('profile-photo');
-            const minWithdrawalSpan = document.getElementById('min-withdrawal-info');
-            const joinedViaSpan = document.getElementById('joined-via');
-            const profileUserIdSpan = document.getElementById('profile-user-id');
-            
-            if (balanceSpan) balanceSpan.textContent = balance;
-            if (walletBalanceSpan) walletBalanceSpan.textContent = balance;
-            if (profileName) profileName.textContent = userData.name || 'No Name';
-            if (profileUsername) profileUsername.textContent = '@' + (userData.username || 'username');
-            if (profilePhoto && currentUser.photoUrl) profilePhoto.src = currentUser.photoUrl;
-            
-            if (minWithdrawalSpan) minWithdrawalSpan.textContent = CONFIG.app.minWithdrawal;
-            if (joinedViaSpan) joinedViaSpan.textContent = userData.joinedVia || 'Telegram';
-            if (profileUserIdSpan) profileUserIdSpan.textContent = currentUser.id;
-            
-            updateAdCounts();
-        }
-
-        function updateAdCounts() {
-            const adsLeftCount = document.getElementById('ads-left-count');
-            if (adsLeftCount) {
-                adsLeftCount.textContent = `${adsGramCount}/${CONFIG.app.dailyAdLimit.adsgram}`;
-            }
-        }
-
-        function navigateTo(pageId) {
-            const subPages = document.querySelectorAll('.sub-page');
-            subPages.forEach(p => p.classList.remove('active'));
-            
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) targetPage.classList.add('active');
-            
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.classList.remove('active', 'text-accent');
-                if (link.dataset.page === pageId) link.classList.add('active', 'text-accent');
-            });
-            
-            if (pageId === 'wallet-page') {
-                loadWithdrawalHistory();
-            } else if (pageId === 'daily-jobs-page') {
-                updateJobButtonStates();
-            } else if (pageId === 'notifications-page') {
-                loadNotifications();
-            } else if (pageId === 'admin-panel') {
-                updateZoneStatus();
-            }
-        }
-
-        function showAlert(message) {
-            const alert = document.getElementById('custom-alert');
-            const messageEl = document.getElementById('alert-message');
-            if (messageEl) messageEl.textContent = message;
-            if (alert) alert.classList.remove('hidden');
-            
-            const okBtn = document.getElementById('alert-ok-btn');
-            if (okBtn) {
-                okBtn.onclick = () => {
-                    if (alert) alert.classList.add('hidden');
-                };
-            }
-        }
-
-        // ==================== NOTIFICATION SYSTEM ====================
-
-        function loadNotifications() {
-            const listEl = document.getElementById('notifications-list');
-            if (!listEl) return;
-            
-            const notifications = [
-                {
-                    title: "পেমেন্ট আপডেট!",
-                    message: "সকল ইউজারদের পেমেন্ট দেওয়া হয়েছে। উইথড্র রিকোয়েস্ট বেশি হওয়ায় মিনিমাম উইথড্র ২০০০ টাকা করা হয়েছে। সবাই কাজ করুন আর দ্রুত উইথড্র দিন!",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    title: "স্বাগতম!",
-                    message: "Smart Money Pro-তে আপনাকে স্বাগতম! টাস্ক সম্পন্ন করে টাকা উপার্জন শুরু করুন।",
-                    createdAt: new Date().toISOString()
-                },
-                {
-                    title: "নতুন অ্যাড!",
-                    message: "এখন অ্যাড দেখেও টাকা উপার্জন করতে পারবেন। মোট ৩০টি অ্যাড দেখা যাবে প্রতিদিন!",
-                    createdAt: new Date().toISOString()
-                }
-            ];
-            
-            listEl.innerHTML = '';
-            notifications.forEach(notification => {
-                const date = new Date(notification.createdAt).toLocaleDateString();
-                listEl.innerHTML += `
-                    <div class="card-bg p-4 rounded-lg">
-                        <div class="flex justify-between items-center mb-1">
-                            <h3 class="font-bold text-slate-800">${notification.title}</h3>
-                            <p class="text-xs text-gray-600">${date}</p>
-                        </div>
-                        <p class="text-sm text-gray-600">${notification.message}</p>
-                    </div>
-                `;
-            });
-        }
-
-        // ==================== WITHDRAWAL SYSTEM ====================
-
-        function loadWithdrawalHistory() {
-            const historyList = document.getElementById('withdrawal-history-list');
-            if (!historyList) return;
-            
-            const withdrawals = loadWithdrawalsFromStorage(currentUser.id);
-            
-            if (withdrawals.length === 0) {
-                historyList.innerHTML = '<p class="text-gray-600 text-center">আপনি এখনো কোন উত্তোলন করেননি</p>';
-                return;
-            }
-            
-            withdrawals.sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt));
-            
-            historyList.innerHTML = '';
-            withdrawals.forEach(request => {
-                const status = request.status;
-                let statusColor = 'text-yellow-500';
-                if (status === 'approved') statusColor = 'text-green-500';
-                else if (status === 'rejected') statusColor = 'text-red-500';
-                const date = new Date(request.requestedAt).toLocaleDateString();
-                
-                historyList.innerHTML += `
-                    <div class="card-bg p-3 rounded-lg flex items-center justify-between">
-                        <div>
-                            <p class="font-semibold text-slate-800">${request.amount} টাকা - ${request.method}</p>
-                            <p class="text-xs text-gray-600">${date}</p>
-                        </div>
-                        <span class="${statusColor} text-sm">${status}</span>
-                    </div>
-                `;
-            });
-        }
-
-        async function handleWithdrawal() {
-            const amountInput = document.getElementById('withdraw-amount');
-            const methodSelect = document.getElementById('withdraw-method');
-            const paymentDetailInput = document.getElementById('payment-detail-input');
-            
-            const amount = amountInput ? parseInt(amountInput.value) : 0;
-            const method = methodSelect ? methodSelect.value : '';
-            const paymentDetail = paymentDetailInput ? paymentDetailInput.value : '';
-            
-            const minWithdrawal = CONFIG.app.minWithdrawal;
-            
-            if (!amount || amount < minWithdrawal) {
-                showAlert(`সর্বনিম্ন উত্তোলন পরিমাণ ৳${minWithdrawal}`);
-                return;
-            }
-            
-            if (amount > userData.balance) {
-                showAlert("আপনার ব্যালেন্সে পর্যাপ্ত টাকা নেই");
-                return;
-            }
-            
-            if (!method) {
-                showAlert("পদ্ধতি নির্বাচন করুন");
-                return;
-            }
-            
-            if (!paymentDetail) {
-                showAlert("পেমেন্ট বিবরণ দিন");
-                return;
-            }
-            
-            try {
-                const withdrawalData = {
-                    userId: currentUser.id,
-                    userName: userData.name,
-                    amount: amount,
-                    method: method,
-                    paymentDetails: paymentDetail,
-                    status: "pending",
-                    requestedAt: new Date().toISOString()
-                };
-                
-                saveWithdrawalToStorage(currentUser.id, withdrawalData);
-                
-                userData.balance -= amount;
-                saveUserToStorage(userData);
-                
-                updateUI();
-                
-                showAlert("আপনার উত্তোলন রিকোয়েস্ট জমা হয়েছে। ২৪-৪৮ ঘন্টার মধ্যে প্রোসেস করা হবে।");
-                
-                if (amountInput) amountInput.value = '';
-                if (methodSelect) methodSelect.value = '';
-                
-                const paymentContainer = document.getElementById('payment-details-container');
-                if (paymentContainer) paymentContainer.innerHTML = '';
-                
-                loadWithdrawalHistory();
-                
-            } catch (error) {
-                console.error("Error processing withdrawal:", error);
-                showAlert("উত্তোলন রিকোয়েস্ট করতে সমস্যা হয়েছে।");
-            }
-        }
-
-        function updateDynamicPaymentFields() {
-            const methodSelect = document.getElementById('withdraw-method');
-            const paymentContainer = document.getElementById('payment-details-container');
-            
-            if (!methodSelect || !paymentContainer) return;
-            
-            const selectedMethod = methodSelect.value.toLowerCase();
-            let placeholder = "বিবরণ লিখুন";
-            
-            if (selectedMethod.includes('bkash')) placeholder = "আপনার বিকাশ নম্বর লিখুন";
-            else if (selectedMethod.includes('nagad')) placeholder = "আপনার নগদ নম্বর লিখুন";
-            else if (selectedMethod.includes('rocket')) placeholder = "আপনার রকেট নম্বর লিখুন";
-            else if (selectedMethod.includes('bank')) placeholder = "আপনার ব্যাংক অ্যাকাউন্ট বিবরণ লিখুন";
-            
-            paymentContainer.innerHTML = `<input id="payment-detail-input" type="text" placeholder="${placeholder}" class="w-full p-3 rounded-lg input-field">`;
-        }
-
-        // ==================== DAILY JOBS SYSTEM ====================
-
-        function setupDailyJobs() {
-            const jobsContainer = document.getElementById('daily-jobs-container');
-            if (!jobsContainer) return;
-
-            jobsContainer.innerHTML = '';
-            
-            for (let i = 1; i <= 20; i++) {
-                const jobLink = CONFIG.dailyJobLinks[`job${i}`] || '#';
-                const jobDiv = document.createElement('div');
-                jobDiv.className = 'card-bg p-4 rounded-lg flex items-center justify-between';
-                jobDiv.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">${i}</div>
-                        <div>
-                            <h3 class="text-slate-800 font-medium">Watch and get reward</h3>
-                            <p class="text-gray-600 text-sm">৳10 আর্ন করুন</p>
-                        </div>
-                    </div>
-                    <button id="job-btn-${i}" data-job-id="${i}" data-job-link="${jobLink}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                        শুরু করুন
-                    </button>
-                `;
-                jobsContainer.appendChild(jobDiv);
-            }
-            
-            updateJobButtonStates();
-            
-            // Attach event listeners to job buttons
-            for (let i = 1; i <= 20; i++) {
-                const btn = document.getElementById(`job-btn-${i}`);
-                if (btn) {
-                    btn.addEventListener('click', () => handleJobClick(i, btn.getAttribute('data-job-link')));
-                }
-            }
-        }
-
-        async function updateJobButtonStates() {
-            if (!currentUser) return;
-            
-            const completedJobs = loadDailyJobsFromStorage(currentUser.id);
-            const jobCompletions = {};
-            
-            completedJobs.forEach(job => {
-                const jobId = job.jobId;
-                const completedAt = new Date(job.completedAt);
-                if (!jobCompletions[jobId] || completedAt > jobCompletions[jobId]) {
-                    jobCompletions[jobId] = completedAt;
-                }
-            });
-            
-            for (let i = 1; i <= 20; i++) {
-                const button = document.getElementById(`job-btn-${i}`);
-                if (!button) continue;
-                
-                const lastCompleted = jobCompletions[i];
-                if (lastCompleted) {
-                    const now = new Date();
-                    const timeDiff = now - lastCompleted;
-                    const eightHours = 8 * 60 * 60 * 1000;
-                    
-                    if (timeDiff < eightHours) {
-                        const remainingTime = eightHours - timeDiff;
-                        const hours = Math.floor(remainingTime / (60 * 60 * 1000));
-                        const minutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
-                        
-                        button.textContent = `${hours}ঘ ${minutes}মি`;
-                        button.className = 'bg-red-600 text-white px-4 py-2 rounded-lg font-medium cursor-not-allowed';
-                        button.disabled = true;
-                    } else {
-                        button.textContent = 'শুরু করুন';
-                        button.className = 'bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors';
-                        button.disabled = false;
-                    }
-                }
-            }
-        }
-
-        async function handleJobClick(jobId, jobLink) {
-            if (!currentUser) {
-                showAlert("লগইন করুন।");
-                return;
-            }
-            
-            const completedJobs = loadDailyJobsFromStorage(currentUser.id);
-            const userJobs = completedJobs.filter(job => job.jobId === jobId);
-            
-            let lastCompleted = null;
-            userJobs.forEach(job => {
-                const completedAt = new Date(job.completedAt);
-                if (!lastCompleted || completedAt > lastCompleted) {
-                    lastCompleted = completedAt;
-                }
-            });
-            
-            if (lastCompleted) {
-                const now = new Date();
-                const timeDiff = now - lastCompleted;
-                const eightHours = 8 * 60 * 60 * 1000;
-                
-                if (timeDiff < eightHours) {
-                    const remainingTime = eightHours - timeDiff;
-                    const hours = Math.floor(remainingTime / (60 * 60 * 1000));
-                    const minutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
-                    return showAlert(`এই কাজটি আবার করতে আরো ${hours} ঘন্টা ${minutes} মিনিট অপেক্ষা করুন।`);
-                }
-            }
-            
-            if (!jobLink || jobLink === '#') {
-                return showAlert("এই কাজের লিংক এখনো সেট করা হয়নি।");
-            }
-            
-            currentJobTracking = {
-                jobId: jobId,
-                startTime: Date.now(),
-                jobLink: jobLink
-            };
-            
-            tg.openLink(jobLink);
-            
-            showAlert("অ্যাড দেখার জন্য ১৫ সেকেন্ড অপেক্ষা করুন, তারপর এই পেজে ফিরে আসুন।");
-            
-            setTimeout(() => {
-                if (currentJobTracking && currentJobTracking.jobId === jobId) {
-                    completeJobAfterValidation(jobId);
-                    currentJobTracking = null;
-                }
-            }, 15000);
-        }
-
-        async function completeJobAfterValidation(jobId) {
-            try {
-                const jobReward = CONFIG.app.dailyJobReward;
-                
-                const jobData = {
-                    userId: currentUser.id,
-                    userName: userData.name || 'Unknown',
-                    jobId: jobId,
-                    completedAt: new Date().toISOString(),
-                    coinsEarned: jobReward,
-                    userAgent: navigator.userAgent
-                };
-                
-                saveDailyJobToStorage(currentUser.id, jobData);
-                
-                userData.balance = (userData.balance || 0) + jobReward;
-                saveUserToStorage(userData);
-                
-                incrementStat('jobsCompleted');
-                
-                updateUI();
-                showAlert(`🎉 সফল! ৳${jobReward} আপনার অ্যাকাউন্টে যোগ হয়েছে।`);
-                
-                updateJobButtonStates();
-                
-            } catch (error) {
-                console.error("Error completing job:", error);
-                showAlert("কাজ সম্পন্ন করতে সমস্যা হয়েছে।");
-            }
-        }
-
-        // ==================== JOB VALIDATION ====================
-
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden && currentJobTracking) {
-                const timeSpent = Date.now() - currentJobTracking.startTime;
-                const requiredTime = 15 * 1000;
-                
-                if (timeSpent >= requiredTime) {
-                    completeJobAfterValidation(currentJobTracking.jobId);
-                } else {
-                    const remainingSeconds = Math.ceil((requiredTime - timeSpent) / 1000);
-                    showAlert(`⚠️ সতর্কবার্তা: আপনি ১৫ সেকেন্ড এর আগে ফিরে এসেছেন! অ্যাড দেখার জন্য আরো ${remainingSeconds} সেকেন্ড অপেক্ষা করুন।`);
-                }
-                
-                currentJobTracking = null;
-            }
+            track.appendChild(slide);
         });
-
-        // ==================== ADMIN SYSTEM ====================
-
-        function checkAdminAccess() {
-            const adminUserIds = [CONFIG.bot.adminChatId];
-            const adminAccess = document.getElementById('admin-access');
-            if (adminUserIds.includes(currentUser?.id)) {
-                if (adminAccess) adminAccess.classList.remove('hidden');
-            } else {
-                if (adminAccess) adminAccess.classList.add('hidden');
-            }
-        }
-
-        async function sendBonusToAllUsers() {
-            const bonusAmountInput = document.getElementById('bonus-amount');
-            const bonusAmount = bonusAmountInput ? parseInt(bonusAmountInput.value) : 0;
-            
-            if (!bonusAmount || bonusAmount <= 0) {
-                showAlert("বোনাসের পরিমাণ সঠিকভাবে লিখুন");
-                return;
-            }
-            
-            if (!confirm(`আপনি কি নিশ্চিত যে আপনি সকল ইউজারকে ৳${bonusAmount} করে বোনাস দিতে চান?`)) {
-                return;
-            }
-            
-            try {
-                showAlert("বোনাস ডিস্ট্রিবিউশন শুরু হয়েছে... এটি কিছু সময় নিতে পারে।");
-                
-                const allUsers = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key && key.startsWith('user_')) {
-                        try {
-                            const userData = JSON.parse(localStorage.getItem(key));
-                            if (userData) allUsers.push(userData);
-                        } catch (e) {
-                            console.error('Error parsing user data:', e);
-                        }
-                    }
-                }
-                
-                let processed = 0;
-                let totalUsers = allUsers.length;
-                
-                for (const user of allUsers) {
-                    user.balance = (user.balance || 0) + bonusAmount;
-                    localStorage.setItem(`user_${user.uid}`, JSON.stringify(user));
-                    processed++;
-                    
-                    if (processed % 10 === 0) {
-                        showAlert(`বোনাস দেওয়া হয়েছে ${processed}/${totalUsers} ইউজারকে...`);
-                    }
-                }
-                
-                showAlert(`🎉 সফল! সকল ${totalUsers} ইউজারকে ৳${bonusAmount} করে বোনাস দেওয়া হয়েছে।`);
-                if (bonusAmountInput) bonusAmountInput.value = '';
-                
-                if (userData) {
-                    const updatedUser = loadUserFromStorage(currentUser.id);
-                    if (updatedUser) {
-                        userData = updatedUser;
-                        updateUI();
-                    }
-                }
-                
-            } catch (error) {
-                console.error("Error sending bonus to all users:", error);
-                showAlert("বোনাস ডিস্ট্রিবিউশনে সমস্যা হয়েছে।");
-            }
-        }
-
-        function updateCooldownTimers() {
-            updateJobButtonStates();
-            setInterval(updateJobButtonStates, 60000);
-        }
-
-        // ==================== EVENT LISTENERS ====================
-
-        function setupEventListeners() {
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const pageId = link.dataset.page;
-                    navigateTo(pageId);
-                });
+        
+        const gridContainer = document.getElementById('videoGridContainer');
+        gridContainer.innerHTML = '';
+        videoItems.forEach((item) => {
+            const downloadLocked = !isButtonUnlocked(item.id, 'download');
+            const watchLocked = !isButtonUnlocked(item.id, 'watch');
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            card.innerHTML = `
+                <div class="thumb-wrapper" data-video-url="${item.videoUrl}" data-video-id="${item.id}">
+                    <img class="thumb-img" src="${item.thumbUrl}" alt="thumb" onerror="this.src='https://placehold.co/400x225?text=No+Image'">
+                    <div class="play-overlay">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-title">${escapeHtml(item.title)}</div>
+                    <div class="btn-group">
+                        <button class="btn btn-download ${downloadLocked ? 'locked-btn' : 'unlocked-btn'}" data-video-id="${item.id}" data-btn-type="download" data-dl-grid="${item.downloadLink}">
+                            <i class="fab fa-youtube"></i> ডাউনলোড
+                        </button>
+                        <button class="btn btn-watch ${watchLocked ? 'locked-btn' : 'unlocked-btn'}" data-video-id="${item.id}" data-btn-type="watch" data-watch-grid="${item.videoUrl}">
+                            <i class="fab fa-youtube"></i> ওয়াচ নাও
+                        </button>
+                    </div>
+                </div>
+            `;
+            gridContainer.appendChild(card);
+        });
+        
+        document.querySelectorAll('.btn-download, .btn-watch').forEach(btn => {
+            btn.removeEventListener('click', handleBtnClick);
+            btn.addEventListener('click', handleBtnClick);
+        });
+        
+        document.querySelectorAll('.thumb-wrapper').forEach(wrapper => {
+            const videoUrl = wrapper.getAttribute('data-video-url');
+            const videoId = parseInt(wrapper.getAttribute('data-video-id'));
+            wrapper.removeEventListener('click', handlePlayClick);
+            wrapper.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onPlayIconClick(videoUrl, videoId);
             });
-            
-            const adClaimBtn = document.getElementById('ad-claim-btn');
-            if (adClaimBtn) adClaimBtn.addEventListener('click', claimAdsGramReward);
-            
-            const monetagAdBtn = document.getElementById('monetag-ad-btn');
-            if (monetagAdBtn) monetagAdBtn.addEventListener('click', claimMonetagReward);
-            
-            const notificationBell = document.getElementById('notification-bell');
-            if (notificationBell) {
-                notificationBell.addEventListener('click', () => { 
-                    navigateTo('notifications-page'); 
-                    loadNotifications(); 
-                });
-            }
-            
-            const withdrawBtn = document.getElementById('withdraw-btn');
-            if (withdrawBtn) withdrawBtn.addEventListener('click', handleWithdrawal);
-            
-            const homeWithdrawBtn = document.getElementById('home-withdraw-btn');
-            if (homeWithdrawBtn) homeWithdrawBtn.addEventListener('click', () => navigateTo('wallet-page'));
-            
-            const withdrawMethod = document.getElementById('withdraw-method');
-            if (withdrawMethod) withdrawMethod.addEventListener('change', updateDynamicPaymentFields);
-            
-            const telegramChannelBtn = document.getElementById('telegram-channel-btn');
-            if (telegramChannelBtn) {
-                telegramChannelBtn.addEventListener('click', () => {
-                    tg.openLink(CONFIG.social.telegram);
-                });
-            }
-            
-            const sendBonusBtn = document.getElementById('send-bonus-btn');
-            if (sendBonusBtn) sendBonusBtn.addEventListener('click', sendBonusToAllUsers);
-            
-            const sendManualReport = document.getElementById('send-manual-report');
-            if (sendManualReport) {
-                sendManualReport.addEventListener('click', function() {
-                    sendReportToChannel();
-                    showAlert("রিপোর্ট পাঠানো হচ্ছে... চ্যানেল চেক করুন।");
-                });
-            }
-            
-            setupDailyJobs();
+        });
+    }
+    
+    function handleBtnClick(e) {
+        e.stopPropagation();
+        const btn = e.currentTarget;
+        const videoId = parseInt(btn.getAttribute('data-video-id'));
+        const btnType = btn.getAttribute('data-btn-type');
+        let downloadLink = btn.getAttribute('data-dl') || btn.getAttribute('data-dl-grid');
+        let watchLink = btn.getAttribute('data-watch') || btn.getAttribute('data-watch-grid');
+        
+        if(btnType === 'download' && downloadLink) {
+            performDownload(downloadLink, videoId, btn);
+        } else if(btnType === 'watch' && watchLink) {
+            performWatch(watchLink, videoId, btn);
         }
-
-        // ==================== INITIALIZATION ====================
-
-        window.onload = () => {
-            lucide.createIcons();
-            setupEventListeners();
-            initializeDarkMode();
-            initTelegramApp();
-            loadDailyStats();
-            
-            setTimeout(initializeAdsGram, 500);
-            setTimeout(initializeMonetag, 1000);
-            
-            updateCooldownTimers();
-            
-            if (CONFIG.bot.reportChannelId) {
-                startAutoReport();
-            }
-        };
-
-        window.navigateTo = navigateTo;
-        window.showAlert = showAlert;
-        window.openSupportPage = openSupportPage;
-        window.handleJobClick = handleJobClick;
-
-    </script>
+    }
+    
+    function handlePlayClick(videoUrl, videoId, e) {
+        onPlayIconClick(videoUrl, videoId);
+    }
+    
+    // স্লাইডার ক্যারোসেল
+    let currentSlide = 0;
+    let autoInterval;
+    const totalSlides = videoItems.length;
+    
+    function buildDotsAndSlider() {
+        const dotsDiv = document.getElementById('carouselDots');
+        dotsDiv.innerHTML = '';
+        for(let i=0; i<totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if(i===currentSlide) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                goToSlide(i);
+                resetAuto();
+            });
+            dotsDiv.appendChild(dot);
+        }
+        goToSlide(0);
+        startAuto();
+    }
+    
+    function goToSlide(index) {
+        if(index<0) index=0;
+        if(index>=totalSlides) index=totalSlides-1;
+        currentSlide = index;
+        const track = document.getElementById('carouselTrack');
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        document.querySelectorAll('.dot').forEach((dot,i)=>{
+            if(i===currentSlide) dot.classList.add('active');
+            else dot.classList.remove('active');
+        });
+    }
+    
+    function nextSlide() { goToSlide((currentSlide+1)%totalSlides); }
+    function startAuto() { if(autoInterval) clearInterval(autoInterval); autoInterval = setInterval(nextSlide, 4000); }
+    function resetAuto() { if(autoInterval){clearInterval(autoInterval); startAuto();} }
+    
+    // মডাল ফাংশন
+    const modal = document.getElementById('infoModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBodyDiv = document.getElementById('modalBody');
+    
+    function showPrivacy() {
+        modalTitle.innerText = "গোপনীয়তা ও পলিসি";
+        modalBodyDiv.innerHTML = `<p>📜 প্রতিটি ডাউনলোড এবং ওয়াচ বাটন আলাদাভাবে আনলক করতে হবে। প্রতিটি বাটনের জন্য পৃথক বিজ্ঞাপন দেখতে হবে।</p><p><i class="fas fa-lock"></i> কোন ডেটা সঞ্চয় করা হয় না।</p><p>🔧 টেলিগ্রাম লিকড প্রিমিয়াম ভিডিও</p>`;
+        modal.style.display = 'flex';
+    }
+    
+    function showAbout() {
+        modalTitle.innerText = "আমাদের সম্পর্কে";
+        modalBodyDiv.innerHTML = `<p>🎬 মিনি অ্যাপ ভিডিও পোর্টাল - পৃথক বাটন আনলক সিস্টেম। প্রতিটি বাটনের জন্য আলাদা অ্যাড দেখতে হবে।</p><p>📧 যোগাযোগ: support@videoportal.com</p><p>📱 টেলিগ্রাম মিনি অ্যাপ ভার্সন</p>`;
+        modal.style.display = 'flex';
+    }
+    
+    document.getElementById('privacyBtn').addEventListener('click', showPrivacy);
+    document.getElementById('aboutBtn').addEventListener('click', showAbout);
+    document.querySelector('.close-modal').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+    window.addEventListener('click', (e) => {
+        if(e.target === modal) modal.style.display = 'none';
+    });
+    
+    // এডসগ্রাম SDK চেক করে লগ দেখানো
+    function checkAdsgramSDK() {
+        if(typeof Adsgram !== 'undefined') {
+            console.log("✅ এডসগ্রাম SDK সফলভাবে লোড হয়েছে। ব্লক আইডি:", ADSGRAM_BLOCK_ID);
+        } else {
+            console.warn("⚠️ এডসগ্রাম SDK লোড হয়নি, সিমুলেশন মোড ব্যবহার হবে।");
+        }
+    }
+    
+    function init() {
+        buildCarouselAndGrid();
+        buildDotsAndSlider();
+        const caro = document.querySelector('.carousel-container');
+        if(caro) {
+            caro.addEventListener('mouseenter', () => { if(autoInterval) clearInterval(autoInterval); });
+            caro.addEventListener('mouseleave', startAuto);
+        }
+        checkAdsgramSDK();
+    }
+    init();
+    console.log("টেলিগ্রাম মিনি অ্যাপ রেডি | এডসগ্রাম ব্লক আইডি:", ADSGRAM_BLOCK_ID);
+</script>
 </body>
 </html>
