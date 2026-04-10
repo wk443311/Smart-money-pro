@@ -596,7 +596,7 @@
             // সঠিক পদ্ধতি: window.Adsgram.init() [citation:3]
             const controller = window.Adsgram.init({ 
                 blockId: blockId,
-                debug: true,  // টেস্টিং এর জন্য true রাখুন, প্রোডাকশনে false করে দিবেন
+                debug: false,  // টেস্টিং এর জন্য true রাখুন, প্রোডাকশনে false করে দিবেন
                 debugBannerType: "RewardedVideo"  // রিওয়ার্ডেড ভিডিও ফরম্যাট
             });
             console.log(`${isVerification ? 'ভেরিফিকেশন' : 'মেইন'} AdController তৈরি হয়েছে`);
