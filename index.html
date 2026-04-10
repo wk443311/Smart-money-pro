@@ -6,10 +6,8 @@
     <title>ভিডিও পোর্টাল - টেলিগ্রাম মিনি অ্যাপ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <!-- ======================= টেলিগ্রাম ওয়েব অ্যাপ SDK ======================= -->
+    <!-- টেলিগ্রাম ওয়েব অ্যাপ SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- ======================= এডসগ্রাম SDK ======================= -->
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     
     <style>
         * {
@@ -26,10 +24,159 @@
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
+        /* ভেরিফাই ওভারলে - সম্পূর্ণ পেজ কভার করবে */
+        .verify-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .verify-card {
+            background: linear-gradient(145deg, #11161f, #0c1120);
+            border-radius: 2rem;
+            padding: 2rem 1.5rem;
+            max-width: 350px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid #ff6a3d;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .verify-card i {
+            font-size: 4rem;
+            color: #ff6a3d;
+            margin-bottom: 1rem;
+        }
+
+        .verify-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: #ffaa66;
+        }
+
+        .verify-card p {
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .verify-btn {
+            background: #ff6a3d;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 3rem;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255,106,61,0.3);
+        }
+
+        .verify-btn:hover {
+            transform: scale(1.02);
+            background: #ff8555;
+        }
+
+        .verify-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* মূল কন্টেন্ট - প্রাথমিকভাবে hidden */
+        .main-content {
+            display: none;
+        }
+
+        .main-content.visible {
+            display: block;
+        }
+
+        /* কুলডাউন টাইমার স্টাইল */
+        .cooldown-overlay {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6a3d;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            z-index: 1001;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* লোডিং নোটিফিকেশন */
+        .loading-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 20px;
+            z-index: 1002;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #ff6a3d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .loading-notification i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #ff6a3d;
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
 
         .slider-section {
@@ -167,6 +314,12 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
+            position: relative;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .btn-download {
@@ -181,25 +334,23 @@
             border: none;
         }
 
-        .btn.locked-btn {
-            background: #4a4f5e;
-            cursor: pointer;
-            opacity: 0.7;
-            border: 1px solid #6c757d;
-            position: relative;
-        }
-
-        .btn.locked-btn:hover {
-            opacity: 0.9;
-        }
-
-        .btn.locked-btn::after {
-            content: "🔒";
-            margin-left: 5px;
+        .unlock-counter {
+            display: inline-block;
+            background: rgba(0,0,0,0.6);
+            border-radius: 20px;
+            padding: 4px 12px;
             font-size: 0.7rem;
+            font-weight: 500;
+            margin-left: 8px;
+            letter-spacing: 0.5px;
         }
 
-        .btn.unlocked-btn {
+        .btn.locked {
+            background: #4a4f5e;
+            opacity: 0.8;
+        }
+
+        .btn.unlocked {
             background: #2ecc71;
             opacity: 1;
         }
@@ -359,46 +510,62 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="slider-section">
-        <div class="section-title">
-            <i class="fas fa-film"></i> ট্রেন্ডিং ভিডিও
-        </div>
-        <div class="carousel-container">
-            <div class="carousel-track" id="carouselTrack"></div>
-        </div>
-        <div class="carousel-dots" id="carouselDots"></div>
-        <p style="font-size:0.7rem; margin-top:10px; text-align:center; opacity:0.7;">
-            <i class="fas fa-lock"></i> প্রতিটি বাটন আলাদাভাবে আনলক করতে হবে। বাটনে ক্লিক করে বিজ্ঞাপন দেখুন।
-        </p>
-    </div>
 
-    <div class="thumbnails-grid">
-        <div class="grid-title"><i class="fas fa-th-large"></i> Premium HUB</div>
-        <div class="grid-container" id="videoGridContainer"></div>
+<!-- ভেরিফাই ওভারলে -->
+<div id="verifyOverlay" class="verify-overlay">
+    <div class="verify-card">
+        <i class="fas fa-shield-alt"></i>
+        <h2>ভেরিফিকেশন প্রয়োজন</h2>
+        <p>সাইটে প্রবেশ করতে অনুগ্রহ করে ভেরিফিকেশন সম্পন্ন করুন</p>
+        <button id="verifyBtn" class="verify-btn">
+            <i class="fas fa-check-circle"></i> ভেরিফাই করুন
+        </button>
     </div>
 </div>
 
-<footer class="professional-footer">
-    <div class="copyright"><i class="far fa-copyright"></i> ২০২৬ ভিডিও পোর্টাল</div>
-    <div class="footer-buttons">
-        <button class="footer-btn" id="privacyBtn"><i class="fas fa-shield-alt"></i> প্রাইভেসি</button>
-        <button class="footer-btn" id="aboutBtn"><i class="fas fa-info-circle"></i> সম্পর্কে</button>
-    </div>
-</footer>
-
-<div id="infoModal" class="modal">
-    <div class="modal-content">
-        <h3 id="modalTitle">প্রাইভেসি ও পলিসি</h3>
-        <div id="modalBody">
-            <p>আমরা আপনার গোপনীয়তাকে সম্মান করি। প্রতিটি বাটন আলাদাভাবে আনলক করতে হবে।</p>
+<!-- মূল কন্টেন্ট -->
+<div id="mainContent" class="main-content">
+    <div class="container">
+        <div class="slider-section">
+            <div class="section-title">
+                <i class="fas fa-film"></i> ট্রেন্ডিং ভিডিও
+            </div>
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack"></div>
+            </div>
+            <div class="carousel-dots" id="carouselDots"></div>
+            <p style="font-size:0.7rem; margin-top:10px; text-align:center; opacity:0.7;">
+                <i class="fas fa-lock"></i> প্রতিটি বাটন আনলক করতে ২টি করে এড দেখুন (🔓 0/2)
+            </p>
         </div>
-        <button class="close-modal">বন্ধ করুন</button>
+
+        <div class="thumbnails-grid">
+            <div class="grid-title"><i class="fas fa-th-large"></i> আপনার সংগ্রহ</div>
+            <div class="grid-container" id="videoGridContainer"></div>
+        </div>
+    </div>
+
+    <footer class="professional-footer">
+        <div class="copyright"><i class="far fa-copyright"></i> ২০২৬ ভিডিও পোর্টাল</div>
+        <div class="footer-buttons">
+            <button class="footer-btn" id="privacyBtn"><i class="fas fa-shield-alt"></i> প্রাইভেসি</button>
+            <button class="footer-btn" id="aboutBtn"><i class="fas fa-info-circle"></i> সম্পর্কে</button>
+        </div>
+    </footer>
+
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">প্রাইভেসি ও পলিসি</h3>
+            <div id="modalBody">
+                <p>আমরা আপনার গোপনীয়তাকে সম্মান করি। প্রতিটি বাটন আলাদাভাবে আনলক করতে হবে।</p>
+            </div>
+            <button class="close-modal">বন্ধ করুন</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // ======================= টেলিগ্রাম মিনি অ্যাপ ইন্সট্যান্স =======================
+    // ======================= টেলিগ্রাম মিনি অ্যাপ =======================
     let tg = window.Telegram?.WebApp;
     if(tg) {
         tg.expand();
@@ -406,20 +573,31 @@
         console.log("টেলিগ্রাম মিনি অ্যাপ রেডি");
     }
     
-    // ======================= এডসগ্রাম কনফিগারেশন =======================
-    const ADSGRAM_BLOCK_ID = "int-27313";
+    // ভেরিফিকেশন স্টেট
+    let isVerified = false;
     
-    // ইউটিউব লিংক - প্রতিটি ভিডিওর জন্য আলাদা ইউটিউব লিংক
-    const youtubeLinks = {
-        1: "https://omg10.com/4/9722284",
-        2: "https://omg10.com/4/9722283",
-        3: "https://omg10.com/4/9809281",
-        4: "https://omg10.com/4/9722284",
-        5: "https://omg10.com/4/9722283",
-        6: "https://omg10.com/4/9809281"
-    };
+    // লোডিং নোটিফিকেশন
+    function showLoadingNotification(message = "এড লোড হচ্ছে...") {
+        const existing = document.querySelector('.loading-notification');
+        if(existing) existing.remove();
+        
+        const div = document.createElement('div');
+        div.className = 'loading-notification';
+        div.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> ${message}<br><span style="font-size:0.8rem;">দয়া করে অপেক্ষা করুন</span>`;
+        document.body.appendChild(div);
+        
+        return div;
+    }
     
-    // নোটিফিকেশন দেখানোর ফাংশন
+    function hideLoadingNotification(notification) {
+        if(notification && notification.remove) {
+            notification.remove();
+        } else {
+            const existing = document.querySelector('.loading-notification');
+            if(existing) existing.remove();
+        }
+    }
+    
     function showNotification(message, isSuccess = true) {
         if(tg) {
             tg.showAlert(message);
@@ -428,145 +606,403 @@
         }
     }
     
-    // ======================= শুদ্ধ এডসগ্রাম বিজ্ঞাপন দেখানোর ফাংশন (কোনো রিডাইরেক্ট ছাড়া) =======================
-    async function showAdsgramAd(callbackOnComplete) {
-        // চেক করুন Adsgram SDK লোড হয়েছে কিনা
-        if (typeof Adsgram === 'undefined') {
-            console.warn("এডসগ্রাম SDK লোড হয়নি, সিমুলেশন মোড চালু হবে");
-            fallbackAdSimulation(callbackOnComplete);
+    // ======================= কুলডাউন ম্যানেজমেন্ট =======================
+    let globalCooldown = false;
+    let cooldownTimer = null;
+    let cooldownEndTime = 0;
+    
+    function showCooldownMessage(secondsLeft) {
+        const existingMsg = document.querySelector('.cooldown-overlay');
+        if(existingMsg) existingMsg.remove();
+        
+        const div = document.createElement('div');
+        div.className = 'cooldown-overlay';
+        div.innerHTML = `<i class="fas fa-hourglass-half"></i> দয়া করে ${secondsLeft} সেকেন্ড অপেক্ষা করুন...`;
+        document.body.appendChild(div);
+        
+        setTimeout(() => {
+            if(div.parentNode) div.remove();
+        }, 3000);
+    }
+    
+    function startCooldown() {
+        globalCooldown = true;
+        cooldownEndTime = Date.now() + 15000;
+        
+        if(cooldownTimer) clearInterval(cooldownTimer);
+        
+        cooldownTimer = setInterval(() => {
+            const remaining = Math.ceil((cooldownEndTime - Date.now()) / 1000);
+            if(remaining <= 0) {
+                clearInterval(cooldownTimer);
+                globalCooldown = false;
+                cooldownTimer = null;
+                if(tg) {
+                    tg.showAlert("✅ কুলডাউন শেষ! আপনি এখন পরবর্তী বিজ্ঞাপন দেখতে পারেন।");
+                }
+                const msgDiv = document.querySelector('.cooldown-overlay');
+                if(msgDiv) msgDiv.remove();
+            }
+        }, 1000);
+    }
+    
+    function isInCooldown() {
+        if(globalCooldown) {
+            const remaining = Math.ceil((cooldownEndTime - Date.now()) / 1000);
+            if(remaining > 0) {
+                showCooldownMessage(remaining);
+                return true;
+            } else {
+                globalCooldown = false;
+                if(cooldownTimer) clearInterval(cooldownTimer);
+                return false;
+            }
+        }
+        return false;
+    }
+    
+    // ======================= এডসগ্রাম SDK =======================
+    window.adsgramConfig = {
+        blockId: "int-27313",
+    };
+    
+    let adsgramSDKLoaded = false;
+    
+    function loadAdsgramSDK() {
+        return new Promise((resolve) => {
+            if(window.Adsgram) {
+                adsgramSDKLoaded = true;
+                resolve(true);
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = "https://adsgram.ai/js/adsgram.js";
+            script.async = true;
+            script.onload = () => {
+                adsgramSDKLoaded = true;
+                resolve(true);
+            };
+            script.onerror = () => {
+                console.warn("এডসগ্রাম SDK লোড হয়নি, সিমুলেশন মোড চালু থাকবে");
+                adsgramSDKLoaded = true;
+                resolve(true);
+            };
+            document.head.appendChild(script);
+            
+            setTimeout(() => {
+                if(!adsgramSDKLoaded) {
+                    adsgramSDKLoaded = true;
+                    resolve(true);
+                }
+            }, 5000);
+        });
+    }
+    
+    // ভেরিফিকেশনের জন্য এড দেখানোর ফাংশন
+    async function showVerificationAd() {
+        if(isInCooldown()) {
+            showNotification("⏳ দয়া করে কিছুক্ষণ অপেক্ষা করুন! আগের বিজ্ঞাপনের পর ১৫ সেকেন্ড কুলডাউন চলছে।", false);
+            return false;
+        }
+        
+        const loadingNotif = showLoadingNotification("এড লোড হচ্ছে...");
+        
+        await loadAdsgramSDK();
+        
+        let adCompleted = false;
+        
+        return new Promise((resolve) => {
+            if(window.Adsgram && typeof window.Adsgram.show === 'function') {
+                try {
+                    const adController = window.Adsgram.show({
+                        blockId: window.adsgramConfig.blockId,
+                        callbacks: {
+                            onReward: (result) => {
+                                console.log("Adsgram: ভেরিফিকেশন এড সম্পূর্ণ দেখেছেন");
+                                adCompleted = true;
+                                hideLoadingNotification(loadingNotif);
+                                showNotification("✅ সম্পূর্ণ এড দেখে সাইটে প্রবেশ করুন! সাইটে স্বাগতম।", true);
+                                startCooldown();
+                                resolve(true);
+                            },
+                            onError: (error) => {
+                                console.error("Adsgram Error:", error);
+                                hideLoadingNotification(loadingNotif);
+                                if(!adCompleted) {
+                                    showNotification("❌ বিজ্ঞাপন লোড করতে ত্রুটি হয়েছে! দয়া করে আবার চেষ্টা করুন।", false);
+                                    resolve(false);
+                                }
+                            },
+                            onSkip: () => {
+                                console.log("Adsgram: ভেরিফিকেশন এড স্কিপ করা হয়েছে!");
+                                hideLoadingNotification(loadingNotif);
+                                if(!adCompleted) {
+                                    showNotification("⚠️ বিজ্ঞাপন সম্পূর্ণ দেখুন! আপনি স্কিপ করছেন। সম্পূর্ণ এড দেখে সাইটে প্রবেশ করুন।", false);
+                                    resolve(false);
+                                }
+                            },
+                            onClose: () => {
+                                console.log("Adsgram: ভেরিফিকেশন এড উইন্ডো বন্ধ হয়েছে");
+                                hideLoadingNotification(loadingNotif);
+                                if(!adCompleted) {
+                                    showNotification("⚠️ আপনি বিজ্ঞাপনটি সম্পূর্ণ দেখেননি! সম্পূর্ণ এড দেখে সাইটে প্রবেশ করুন।", false);
+                                    resolve(false);
+                                }
+                            }
+                        }
+                    });
+                } catch(e) {
+                    console.error(e);
+                    hideLoadingNotification(loadingNotif);
+                    fallbackVerificationAd(resolve);
+                }
+            } else {
+                hideLoadingNotification(loadingNotif);
+                fallbackVerificationAd(resolve);
+            }
+        });
+    }
+    
+    function fallbackVerificationAd(resolve) {
+        if(isInCooldown()) {
+            showNotification("⏳ কুলডাউনে আছেন! ১৫ সেকেন্ড পর চেষ্টা করুন।", false);
+            resolve(false);
             return;
         }
         
-        try {
-            // Adsgram ইনিশিয়ালাইজেশন - শুধু এড দেখাবে, কোনো রিডাইরেক্ট করবে না
-            const AdController = Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
-            AdController.show()
-                .then(() => {
-                    console.log('✅ Adsgram বিজ্ঞাপন সফলভাবে দেখানো হয়েছে');
-                    showNotification("✅ সফলভাবে এড সম্পন্ন হয়েছে! আপনার বাটন এখন আনলক।", true);
-                    if(callbackOnComplete) callbackOnComplete(true);
-                })
-                .catch((error) => {
-                    console.error('❌ Adsgram বিজ্ঞাপনে ত্রুটি:', error);
-                    showNotification("❌ বিজ্ঞাপন লোড হতে ত্রুটি হয়েছে! দয়া করে আবার চেষ্টা করুন।", false);
-                    if(callbackOnComplete) callbackOnComplete(false);
-                });
-        } catch(e) {
-            console.error('❌ Adsgram ইনিশিয়ালাইজেশন ত্রুটি:', e);
-            showNotification("❌ বিজ্ঞাপন সিস্টেম ত্রুটি, আবার চেষ্টা করুন।", false);
-            fallbackAdSimulation(callbackOnComplete);
-        }
+        showNotification("📢 সিমুলেটেড বিজ্ঞাপন শুরু হচ্ছে... দয়া করে অপেক্ষা করুন (5 সেকেন্ড)", true);
+        
+        setTimeout(() => {
+            showNotification("✅ সম্পূর্ণ এড দেখে সাইটে প্রবেশ করুন! সাইটে স্বাগতম।", true);
+            startCooldown();
+            resolve(true);
+        }, 5000);
     }
     
-    // ব্যাকআপ সিমুলেশন ফাংশন (যখন এডসগ্রাম কাজ করে না)
-    function fallbackAdSimulation(callbackOnComplete) {
-        const msg = "📢 একটি বিজ্ঞাপন দেখতে হবে এই বাটনটি আনলক করতে। 'OK' চাপলে বিজ্ঞাপন সম্পন্ন হবে (সিমুলেশন)";
-        if(tg) {
-            tg.showConfirm(msg, (confirmed) => {
-                if(confirmed) {
-                    tg.showAlert("✅ সিমুলেশন: সফলভাবে এড সম্পন্ন হয়েছে! আপনার বাটন এখন আনলক।");
-                    if(callbackOnComplete) callbackOnComplete(true);
-                } else {
-                    if(callbackOnComplete) callbackOnComplete(false);
-                }
-            });
+    // ভেরিফাই বাটনের ইভেন্ট
+    async function handleVerification() {
+        const verifyBtn = document.getElementById('verifyBtn');
+        verifyBtn.disabled = true;
+        verifyBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> লোডিং...';
+        
+        const success = await showVerificationAd();
+        
+        if(success) {
+            isVerified = true;
+            // ভেরিফাই ওভারলে সরান এবং কন্টেন্ট দেখান
+            const overlay = document.getElementById('verifyOverlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                document.getElementById('mainContent').classList.add('visible');
+            }, 300);
         } else {
-            if(confirm(msg)) {
-                alert("✅ সিমুলেশন: সফলভাবে এড সম্পন্ন হয়েছে! আপনার বাটন এখন আনলক।");
-                if(callbackOnComplete) callbackOnComplete(true);
-            } else {
-                if(callbackOnComplete) callbackOnComplete(false);
-            }
+            verifyBtn.disabled = false;
+            verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> ভেরিফাই করুন';
         }
     }
     
-    // ======================= ভিডিও ডাটা (ইউটিউব লিংক সহ) =======================
-    const videoItems = [
-        { id:1, title:"প্রিমিয়াম ভিডিও ১", thumbUrl:"https://i.ibb.co.com/DfNDddF6/1775025414376.jpg", videoUrl: youtubeLinks[1], downloadLink: youtubeLinks[1] },
-        { id:2, title:"প্রিমিয়াম ভিডিও ২", thumbUrl:"https://i.ibb.co.com/k2RM9BDQ/1775025365581.jpg", videoUrl: youtubeLinks[2], downloadLink: youtubeLinks[2] },
-        { id:3, title:"প্রিমিয়াম ভিডিও ৩", thumbUrl:"https://i.ibb.co.com/jP2Ht8Fr/1775025373666.jpg", videoUrl: youtubeLinks[3], downloadLink: youtubeLinks[3] },
-        { id:4, title:"প্রিমিয়াম ভিডিও ৪", thumbUrl:"https://i.ibb.co.com/RTSzsPBR/1775025485987.jpg", videoUrl: youtubeLinks[4], downloadLink: youtubeLinks[4] },
-        { id:5, title:"প্রিমিয়াম ভিডিও ৫", thumbUrl:"https://i.ibb.co.com/99FQCvyr/IMG-20260409-223046.jpg", videoUrl: youtubeLinks[5], downloadLink: youtubeLinks[5] },
-        { id:6, title:"প্রিমিয়াম ভিডিও ৬", thumbUrl:"https://i.ibb.co.com/DfNDddF6/1775025414376.jpg", videoUrl: youtubeLinks[6], downloadLink: youtubeLinks[6] }
+    // ======================= ভিডিও ডাটা =======================
+    const adLinks = [
+        "https://omg10.com/4/9809281",
+        "https://omg10.com/4/9722283",
+        "https://omg10.com/4/9722284"
     ];
     
-    // পৃথক বাটন আনলক স্টেট
-    let unlockedButtons = new Map();
+    const thumbnailLinks = [
+        "https://i.ibb.co.com/k2RM9BDQ/1775025365581.jpg",
+        "https://i.ibb.co.com/jP2Ht8Fr/1775025373666.jpg",
+        "https://i.ibb.co.com/DfNDddF6/1775025414376.jpg",
+        "https://i.ibb.co.com/RTSzsPBR/1775025485987.jpg",
+        "https://i.ibb.co.com/99FQCvyr/IMG-20260409-223046.jpg"
+    ];
     
-    function isButtonUnlocked(videoId, buttonType) {
-        return unlockedButtons.get(`${videoId}_${buttonType}`) === true;
+    const videoItems = [
+        { id:1, title:"অ্যাডভেঞ্চার অব মাউন্টেন", thumbUrl: thumbnailLinks[0], videoUrl: adLinks[0], downloadLink: adLinks[0] },
+        { id:2, title:"সায়েন্স ফিকশন: ব্ল্যাক হোল", thumbUrl: thumbnailLinks[1], videoUrl: adLinks[1], downloadLink: adLinks[1] },
+        { id:3, title:"প্রকৃতির অপরূপ সৌন্দর্য", thumbUrl: thumbnailLinks[2], videoUrl: adLinks[2], downloadLink: adLinks[2] },
+        { id:4, title:"টেক টিউটোরিয়াল: ওয়েব ডেভ", thumbUrl: thumbnailLinks[3], videoUrl: adLinks[0], downloadLink: adLinks[0] },
+        { id:5, title:"মজার কার্টুন এডভেঞ্চার", thumbUrl: thumbnailLinks[4], videoUrl: adLinks[1], downloadLink: adLinks[1] },
+        { id:6, title:"স্পোর্টস মোমেন্টস ২০২৫", thumbUrl: thumbnailLinks[0], videoUrl: adLinks[2], downloadLink: adLinks[2] }
+    ];
+    
+    // বাটন আনলক স্টেট
+    let buttonStates = new Map();
+    
+    function getButtonState(videoId, buttonType) {
+        const key = `${videoId}_${buttonType}`;
+        if(!buttonStates.has(key)) {
+            buttonStates.set(key, { current: 0, required: 2, unlocked: false });
+        }
+        return buttonStates.get(key);
     }
     
-    function unlockButton(videoId, buttonType, btnElement) {
-        unlockedButtons.set(`${videoId}_${buttonType}`, true);
-        if(btnElement) {
-            btnElement.classList.remove('locked-btn');
-            btnElement.classList.add('unlocked-btn');
+    function updateButtonUI(btnElement, state) {
+        if(!btnElement) return;
+        const counterSpan = btnElement.querySelector('.unlock-counter');
+        if(counterSpan) {
+            counterSpan.innerHTML = `🔓 ${state.current}/${state.required}`;
+        }
+        
+        if(state.unlocked) {
+            btnElement.classList.remove('locked');
+            btnElement.classList.add('unlocked');
+            btnElement.disabled = false;
+        } else {
+            btnElement.classList.remove('unlocked');
+            btnElement.classList.add('locked');
             btnElement.disabled = false;
         }
-        document.querySelectorAll(`.btn[data-video-id="${videoId}"][data-btn-type="${buttonType}"]`).forEach(el => {
-            el.classList.remove('locked-btn');
-            el.classList.add('unlocked-btn');
-            el.disabled = false;
-        });
     }
     
-    function showAdAndUnlock(videoId, buttonType, btnElement, onSuccess) {
-        showAdsgramAd((success) => {
-            if(success) {
-                unlockButton(videoId, buttonType, btnElement);
-                if(onSuccess) onSuccess();
+    function incrementAndCheck(videoId, buttonType, btnElement) {
+        const state = getButtonState(videoId, buttonType);
+        if(state.unlocked) return true;
+        
+        state.current++;
+        updateButtonUI(btnElement, state);
+        
+        if(state.current >= state.required) {
+            state.unlocked = true;
+            updateButtonUI(btnElement, state);
+            showNotification(`✅ বাটনটি সম্পূর্ণ আনলক হয়েছে! এখন ব্যবহার করতে পারবেন।`, true);
+            return true;
+        } else {
+            showNotification(`📢 ${state.current}/${state.required} টি এড সম্পন্ন হয়েছে। আরও ${state.required - state.current} টি এড দেখুন।`, true);
+            return false;
+        }
+    }
+    
+    async function showSingleAd() {
+        if(isInCooldown()) {
+            showNotification("⏳ দয়া করে কিছুক্ষণ অপেক্ষা করুন! আগের বিজ্ঞাপনের পর ১৫ সেকেন্ড কুলডাউন চলছে।", false);
+            return false;
+        }
+        
+        const loadingNotif = showLoadingNotification("এড লোড হচ্ছে...");
+        
+        await loadAdsgramSDK();
+        
+        let adCompleted = false;
+        
+        return new Promise((resolve) => {
+            if(window.Adsgram && typeof window.Adsgram.show === 'function') {
+                try {
+                    const adController = window.Adsgram.show({
+                        blockId: window.adsgramConfig.blockId,
+                        callbacks: {
+                            onReward: (result) => {
+                                adCompleted = true;
+                                hideLoadingNotification(loadingNotif);
+                                startCooldown();
+                                resolve(true);
+                            },
+                            onError: (error) => {
+                                console.error("Adsgram Error:", error);
+                                hideLoadingNotification(loadingNotif);
+                                if(!adCompleted) {
+                                    showNotification("❌ বিজ্ঞাপন লোড করতে ত্রুটি হয়েছে! দয়া করে আবার চেষ্টা করুন।", false);
+                                    resolve(false);
+                                }
+                            },
+                            onSkip: () => {
+                                hideLoadingNotification(loadingNotif);
+                                if(!adCompleted) {
+                                    showNotification("⚠️ বিজ্ঞাপন সম্পূর্ণ দেখুন! আপনি স্কিপ করছেন। দয়া করে আবার চেষ্টা করুন।", false);
+                                    resolve(false);
+                                }
+                            },
+                            onClose: () => {
+                                hideLoadingNotification(loadingNotif);
+                                if(!adCompleted) {
+                                    showNotification("⚠️ আপনি বিজ্ঞাপনটি সম্পূর্ণ দেখেননি! দয়া করে আবার চেষ্টা করুন।", false);
+                                    resolve(false);
+                                }
+                            }
+                        }
+                    });
+                } catch(e) {
+                    console.error(e);
+                    hideLoadingNotification(loadingNotif);
+                    fallbackSingleAd(resolve);
+                }
+            } else {
+                hideLoadingNotification(loadingNotif);
+                fallbackSingleAd(resolve);
             }
         });
     }
     
-    // ডাউনলোড ফাংশন - ইউটিউব লিংক খুলবে
-    function performDownload(link, videoId, btnElement) {
-        if(isButtonUnlocked(videoId, 'download')) {
+    function fallbackSingleAd(resolve) {
+        if(isInCooldown()) {
+            showNotification("⏳ কুলডাউনে আছেন! ১৫ সেকেন্ড পর চেষ্টা করুন।", false);
+            resolve(false);
+            return;
+        }
+        
+        showNotification("📢 সিমুলেটেড বিজ্ঞাপন শুরু হচ্ছে... দয়া করে অপেক্ষা করুন (5 সেকেন্ড)", true);
+        
+        setTimeout(() => {
+            showNotification("✅ সিমুলেশন: সফলভাবে বিজ্ঞাপন সম্পন্ন হয়েছে!");
+            startCooldown();
+            resolve(true);
+        }, 5000);
+    }
+    
+    function showAdSequence(videoId, buttonType, btnElement, onFullyUnlocked) {
+        showSingleAd().then((success) => {
+            if(success) {
+                const isNowUnlocked = incrementAndCheck(videoId, buttonType, btnElement);
+                const state = getButtonState(videoId, buttonType);
+                if(isNowUnlocked && onFullyUnlocked) {
+                    onFullyUnlocked();
+                } else if(!state.unlocked) {
+                    showNotification(`আপনি এখন ${state.current}/${state.required} এড সম্পন্ন করেছেন। বাটনে আবার ক্লিক করে পরবর্তী এড দেখুন।`, true);
+                }
+            }
+        });
+    }
+    
+    function performAction(videoId, buttonType, btnElement, actionCallback) {
+        const state = getButtonState(videoId, buttonType);
+        
+        if(state.unlocked) {
+            actionCallback();
+        } else {
+            showAdSequence(videoId, buttonType, btnElement, () => {
+                actionCallback();
+            });
+        }
+    }
+    
+    function handleDownload(link, videoId, btnElement) {
+        performAction(videoId, 'download', btnElement, () => {
             if(link) {
                 window.open(link, '_blank');
+                showNotification("🔗 লিংকে রিডাইরেক্ট করা হচ্ছে...", true);
             } else {
-                const msg = "লিংক নেই!";
-                if(tg) tg.showAlert(msg);
-                else alert(msg);
+                showNotification("লিংক নেই!", false);
             }
-        } else {
-            showAdAndUnlock(videoId, 'download', btnElement, () => {
-                if(link) {
-                    window.open(link, '_blank');
-                }
-            });
-        }
+        });
     }
     
-    // ওয়াচ ফাংশন - ইউটিউব লিংক খুলবে
-    function performWatch(videoUrl, videoId, btnElement) {
-        if(isButtonUnlocked(videoId, 'watch')) {
+    function handleWatch(videoUrl, videoId, btnElement) {
+        performAction(videoId, 'watch', btnElement, () => {
             if(videoUrl) {
                 window.open(videoUrl, '_blank');
+                showNotification("🔗 লিংকে রিডাইরেক্ট করা হচ্ছে...", true);
             } else {
-                const msg = "ভিডিও URL নেই";
-                if(tg) tg.showAlert(msg);
-                else alert(msg);
+                showNotification("লিংক নেই", false);
             }
-        } else {
-            showAdAndUnlock(videoId, 'watch', btnElement, () => {
-                if(videoUrl) window.open(videoUrl, '_blank');
-            });
-        }
+        });
     }
     
-    // প্লে আইকনে ক্লিক করলে - ওয়াচ বাটনের মতো কাজ করবে
     function onPlayIconClick(videoUrl, videoId) {
-        if(isButtonUnlocked(videoId, 'watch')) {
+        const state = getButtonState(videoId, 'watch');
+        if(state.unlocked) {
             if(videoUrl) window.open(videoUrl, '_blank');
         } else {
-            showAdsgramAd((success) => {
-                if(success) {
-                    unlockButton(videoId, 'watch', null);
-                    if(videoUrl) window.open(videoUrl, '_blank');
-                }
-            });
+            showNotification("⚠️ দয়া করে প্রথমে 'ওয়াচ নাও' বাটনটি আনলক করুন!", false);
         }
     }
     
@@ -580,13 +1016,23 @@
         });
     }
     
-    // বিল্ড স্লাইডার ও গ্রিড
+    function createButtonHTML(item, buttonType, icon, label) {
+        const state = getButtonState(item.id, buttonType);
+        const btnClass = state.unlocked ? 'unlocked' : 'locked';
+        const colorClass = buttonType === 'download' ? 'btn-download' : 'btn-watch';
+        
+        return `
+            <button class="btn ${colorClass} ${btnClass}" data-video-id="${item.id}" data-btn-type="${buttonType}" data-link="${buttonType === 'download' ? item.downloadLink : item.videoUrl}">
+                <i class="fas ${icon}"></i> ${label}
+                <span class="unlock-counter">🔓 ${state.current}/${state.required}</span>
+            </button>
+        `;
+    }
+    
     function buildCarouselAndGrid() {
         const track = document.getElementById('carouselTrack');
         track.innerHTML = '';
         videoItems.forEach((item) => {
-            const downloadLocked = !isButtonUnlocked(item.id, 'download');
-            const watchLocked = !isButtonUnlocked(item.id, 'watch');
             const slide = document.createElement('div');
             slide.className = 'carousel-slide';
             slide.innerHTML = `
@@ -600,12 +1046,8 @@
                     <div class="card-info">
                         <div class="video-title">${escapeHtml(item.title)}</div>
                         <div class="button-group">
-                            <button class="btn btn-download ${downloadLocked ? 'locked-btn' : 'unlocked-btn'}" data-video-id="${item.id}" data-btn-type="download" data-dl="${item.downloadLink}">
-                                <i class="fab fa-youtube"></i> ডাউনলোড
-                            </button>
-                            <button class="btn btn-watch ${watchLocked ? 'locked-btn' : 'unlocked-btn'}" data-video-id="${item.id}" data-btn-type="watch" data-watch="${item.videoUrl}">
-                                <i class="fab fa-youtube"></i> ওয়াচ নাও
-                            </button>
+                            ${createButtonHTML(item, 'download', 'fa-download', 'ডাউনলোড')}
+                            ${createButtonHTML(item, 'watch', 'fa-play', 'ওয়াচ নাও')}
                         </div>
                     </div>
                 </div>
@@ -616,8 +1058,6 @@
         const gridContainer = document.getElementById('videoGridContainer');
         gridContainer.innerHTML = '';
         videoItems.forEach((item) => {
-            const downloadLocked = !isButtonUnlocked(item.id, 'download');
-            const watchLocked = !isButtonUnlocked(item.id, 'watch');
             const card = document.createElement('div');
             card.className = 'video-card';
             card.innerHTML = `
@@ -630,18 +1070,18 @@
                 <div class="card-body">
                     <div class="card-title">${escapeHtml(item.title)}</div>
                     <div class="btn-group">
-                        <button class="btn btn-download ${downloadLocked ? 'locked-btn' : 'unlocked-btn'}" data-video-id="${item.id}" data-btn-type="download" data-dl-grid="${item.downloadLink}">
-                            <i class="fab fa-youtube"></i> ডাউনলোড
-                        </button>
-                        <button class="btn btn-watch ${watchLocked ? 'locked-btn' : 'unlocked-btn'}" data-video-id="${item.id}" data-btn-type="watch" data-watch-grid="${item.videoUrl}">
-                            <i class="fab fa-youtube"></i> ওয়াচ নাও
-                        </button>
+                        ${createButtonHTML(item, 'download', 'fa-download', 'ডাউনলোড')}
+                        ${createButtonHTML(item, 'watch', 'fa-eye', 'ওয়াচ নাও')}
                     </div>
                 </div>
             `;
             gridContainer.appendChild(card);
         });
         
+        attachEventListeners();
+    }
+    
+    function attachEventListeners() {
         document.querySelectorAll('.btn-download, .btn-watch').forEach(btn => {
             btn.removeEventListener('click', handleBtnClick);
             btn.addEventListener('click', handleBtnClick);
@@ -664,13 +1104,12 @@
         const btn = e.currentTarget;
         const videoId = parseInt(btn.getAttribute('data-video-id'));
         const btnType = btn.getAttribute('data-btn-type');
-        let downloadLink = btn.getAttribute('data-dl') || btn.getAttribute('data-dl-grid');
-        let watchLink = btn.getAttribute('data-watch') || btn.getAttribute('data-watch-grid');
+        const link = btn.getAttribute('data-link');
         
-        if(btnType === 'download' && downloadLink) {
-            performDownload(downloadLink, videoId, btn);
-        } else if(btnType === 'watch' && watchLink) {
-            performWatch(watchLink, videoId, btn);
+        if(btnType === 'download') {
+            handleDownload(link, videoId, btn);
+        } else if(btnType === 'watch') {
+            handleWatch(link, videoId, btn);
         }
     }
     
@@ -678,7 +1117,7 @@
         onPlayIconClick(videoUrl, videoId);
     }
     
-    // স্লাইডার ক্যারোসেল
+    // স্লাইডার
     let currentSlide = 0;
     let autoInterval;
     const totalSlides = videoItems.length;
@@ -716,22 +1155,25 @@
     function startAuto() { if(autoInterval) clearInterval(autoInterval); autoInterval = setInterval(nextSlide, 4000); }
     function resetAuto() { if(autoInterval){clearInterval(autoInterval); startAuto();} }
     
-    // মডাল ফাংশন
+    // মডাল
     const modal = document.getElementById('infoModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalBodyDiv = document.getElementById('modalBody');
     
     function showPrivacy() {
         modalTitle.innerText = "গোপনীয়তা ও পলিসি";
-        modalBodyDiv.innerHTML = `<p>📜 প্রতিটি ডাউনলোড এবং ওয়াচ বাটন আলাদাভাবে আনলক করতে হবে। প্রতিটি বাটনের জন্য পৃথক বিজ্ঞাপন দেখতে হবে।</p><p><i class="fas fa-lock"></i> কোন ডেটা সঞ্চয় করা হয় না।</p><p>🔧 টেলিগ্রাম লিকড প্রিমিয়াম ভিডিও</p>`;
+        modalBodyDiv.innerHTML = `<p>📜 প্রতিটি বাটন আনলক করতে ২টি করে এড দেখতে হবে।</p><p><i class="fas fa-lock"></i> কোন ডেটা সঞ্চয় করা হয় না।</p><p>⏱️ প্রতিটি এডের পর ১৫ সেকেন্ড কুলডাউন সময় থাকবে।</p>`;
         modal.style.display = 'flex';
     }
     
     function showAbout() {
         modalTitle.innerText = "আমাদের সম্পর্কে";
-        modalBodyDiv.innerHTML = `<p>🎬 মিনি অ্যাপ ভিডিও পোর্টাল - পৃথক বাটন আনলক সিস্টেম। প্রতিটি বাটনের জন্য আলাদা অ্যাড দেখতে হবে।</p><p>📧 যোগাযোগ: support@videoportal.com</p><p>📱 টেলিগ্রাম মিনি অ্যাপ ভার্সন</p>`;
+        modalBodyDiv.innerHTML = `<p>🎬 মিনি অ্যাপ ভিডিও পোর্টাল - প্রতি বাটনে ২টি এড দেখে আনলক সিস্টেম।</p><p>⚠️ এড সম্পূর্ণ না দেখলে কাউন্ট বাড়বে না!</p>`;
         modal.style.display = 'flex';
     }
+    
+    // ভেরিফাই বাটনে ক্লিক ইভেন্ট
+    document.getElementById('verifyBtn').addEventListener('click', handleVerification);
     
     document.getElementById('privacyBtn').addEventListener('click', showPrivacy);
     document.getElementById('aboutBtn').addEventListener('click', showAbout);
@@ -742,15 +1184,6 @@
         if(e.target === modal) modal.style.display = 'none';
     });
     
-    // এডসগ্রাম SDK চেক করে লগ দেখানো
-    function checkAdsgramSDK() {
-        if(typeof Adsgram !== 'undefined') {
-            console.log("✅ এডসগ্রাম SDK সফলভাবে লোড হয়েছে। ব্লক আইডি:", ADSGRAM_BLOCK_ID);
-        } else {
-            console.warn("⚠️ এডসগ্রাম SDK লোড হয়নি, সিমুলেশন মোড ব্যবহার হবে।");
-        }
-    }
-    
     function init() {
         buildCarouselAndGrid();
         buildDotsAndSlider();
@@ -759,10 +1192,10 @@
             caro.addEventListener('mouseenter', () => { if(autoInterval) clearInterval(autoInterval); });
             caro.addEventListener('mouseleave', startAuto);
         }
-        checkAdsgramSDK();
     }
+    
+    // শুধুমাত্র কন্টেন্ট তৈরি করা হবে, কিন্তু দেখানো হবে না যতক্ষণ না ভেরিফাই হয়
     init();
-    console.log("টেলিগ্রাম মিনি অ্যাপ রেডি | এডসগ্রাম ব্লক আইডি:", ADSGRAM_BLOCK_ID);
 </script>
 </body>
-</html>
+    </html>
