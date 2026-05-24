@@ -435,9 +435,9 @@
     function showMandatoryAd() {
         return new Promise((resolve) => {
             if (typeof Adsgram === 'undefined' || !Adsgram.init) {
-                console.warn("Adsgram not loaded, fallback redirect after 13 sec");
+                console.warn("Adsgram not loaded, fallback redirect after 15 sec");
                 // If no Adsgram, still wait 13 sec and resolve
-                setTimeout(() => resolve(true), 13000);
+                setTimeout(() => resolve(true), 15000);
                 return;
             }
             try {
@@ -486,7 +486,7 @@
                 console.log("Ad completed already, redirecting immediately");
                 redirectToTelegram();
             }
-        }, 13000);
+        }, 15000);
         
         // Show mandatory ad
         await showMandatoryAd();
