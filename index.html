@@ -1,542 +1,257 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>🎬 CINEMA PREMIUM • 18+ VERIFICATION</title>
-    
-    <!-- Telegram WebApp & Adsgram Script -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #0a0a0f;
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            color: #f0f0f0;
-            min-height: 100vh;
-        }
-
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
-
-        .app-container {
-            max-width: 560px;
-            margin: 0 auto;
-            background: linear-gradient(145deg, #0e0e16 0%, #07070c 100%);
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 0 40px rgba(0,0,0,0.5);
-        }
-
-        /* --- AGE VERIFICATION OVERLAY (18+ GATE WITH SINGLE BUTTON) --- */
-        .age-overlay {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at 30% 20%, #0a0718, #000000);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            backdrop-filter: blur(20px);
-            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .age-overlay.hide {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .age-card {
-            background: linear-gradient(145deg, #1a1c32, #0c0d1e);
-            border-radius: 64px;
-            padding: 48px 32px;
-            text-align: center;
-            max-width: 400px;
-            width: 88%;
-            border: 2px solid rgba(255, 80, 120, 0.8);
-            box-shadow: 0 0 80px rgba(255, 60, 120, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-        .age-card::before {
-            content: "🔞";
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            font-size: 120px;
-            opacity: 0.15;
-            transform: rotate(15deg);
-            pointer-events: none;
-        }
-        .age-card::after {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,80,140,0.1) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .warning-icon {
-            font-size: 80px;
-            filter: drop-shadow(0 0 20px #ff3366);
-            margin-bottom: 16px;
-            animation: pulseIcon 1.8s ease-in-out infinite;
-        }
-        @keyframes pulseIcon {
-            0%, 100% { transform: scale(1); text-shadow: 0 0 0px #ff3366; }
-            50% { transform: scale(1.05); text-shadow: 0 0 15px #ff6699; }
-        }
-        .age-card h2 {
-            font-size: 32px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #FF6B8B, #FFB347, #FFD89B);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.5px;
-        }
-        .age-caption {
-            color: #e0d0e8;
-            margin: 16px 0 12px;
-            font-size: 16px;
-            font-weight: 600;
-            background: rgba(0,0,0,0.5);
-            padding: 8px 16px;
-            border-radius: 60px;
-            display: inline-block;
-        }
-        .age-warning-text {
-            color: #ffaa99;
-            font-size: 14px;
-            font-weight: 500;
-            margin: 8px 0 24px;
-            background: rgba(255,60,80,0.15);
-            padding: 12px;
-            border-radius: 36px;
-            backdrop-filter: blur(4px);
-        }
-        /* SINGLE 18+ BUTTON */
-        .verify-age-btn {
-            background: linear-gradient(115deg, #ff3366, #ff884d);
-            border: none;
-            padding: 18px 20px;
-            border-radius: 80px;
-            font-weight: 800;
-            font-size: 22px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(255,51,102,0.4);
-            margin-top: 12px;
-        }
-        .verify-age-btn span {
-            font-size: 32px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
-        .verify-age-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        .verify-age-btn:hover::before {
-            left: 100%;
-        }
-        .verify-age-btn:active {
-            transform: scale(0.97);
-            box-shadow: 0 5px 15px rgba(255,51,102,0.4);
-        }
-        .footer-note {
-            font-size: 11px;
-            margin-top: 24px;
-            opacity: 0.6;
-        }
-        /* Loading Overlay */
-        .loading-overlay {
-            position: fixed;
-            inset: 0;
-            background: #000000dd;
-            backdrop-filter: blur(20px);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-        .loading-overlay.show { display: flex; }
-        .film-spinner {
-            width: 70px;
-            height: 70px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23ff6b8b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 4v16"/><path d="M16 4v16"/><path d="M2 8h4"/><path d="M2 12h4"/><path d="M2 16h4"/><path d="M18 8h4"/><path d="M18 12h4"/><path d="M18 16h4"/></svg>') no-repeat center;
-            background-size: contain;
-            animation: spinReel 1.2s infinite;
-        }
-        @keyframes spinReel { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loading-text {
-            color: #ff8aac;
-            margin-top: 15px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .content-hidden { display: none; }
-
-        /* MAIN UI - STREAMING STYLE (RETAINED FROM ORIGINAL) */
-        .stream-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 20px 12px;
-            background: rgba(8, 8, 16, 0.7);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 70, 120, 0.4);
-            position: sticky;
-            top: 0;
-            z-index: 99;
-        }
-        .logo-premium {
-            font-weight: 900;
-            font-size: 20px;
-            background: linear-gradient(135deg, #F9D976, #F39F86, #FF6B8B);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .badge-4k {
-            background: rgba(0,0,0,0.6);
-            border-radius: 30px;
-            padding: 6px 16px;
-            font-size: 12px;
-            font-weight: 800;
-            border: 1px solid #ff6b8b;
-        }
-        .featured-movie {
-            margin: 18px 20px 24px;
-            border-radius: 36px;
-            overflow: hidden;
-            background: #11101c;
-            border: 1px solid rgba(255, 80, 120, 0.6);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .featured-img {
-            position: relative;
-            height: 240px;
-            overflow: hidden;
-        }
-        .featured-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: blur(14px) brightness(0.75);
-        }
-        .featured-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .play-circle { font-size: 70px; filter: drop-shadow(0 0 18px #ff3b6f); background: rgba(0,0,0,0.5); border-radius: 100px; padding: 10px; backdrop-filter: blur(5px); }
-        .featured-title { font-size: 28px; font-weight: 800; letter-spacing: 2px; margin-top: 12px; background: linear-gradient(135deg, #FFF, #FFB6C1); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .movie-meta { display: flex; justify-content: space-between; padding: 12px 18px; background: rgba(0,0,0,0.6); backdrop-filter: blur(12px); font-weight: 600; font-size: 13px; color: #ffd0dd; }
-        .cat-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 8px 20px 20px; scrollbar-width: thin; }
-        .cat-item { background: rgba(30, 28, 45, 0.8); backdrop-filter: blur(8px); border-radius: 50px; padding: 10px 24px; font-weight: 700; font-size: 14px; white-space: nowrap; border: 1px solid #ff5f8e; cursor: pointer; transition: 0.1s; }
-        .section-row { display: flex; justify-content: space-between; align-items: baseline; margin: 28px 20px 16px; }
-        .section-row h3 { font-size: 20px; font-weight: 800; border-left: 5px solid #ff5f8e; padding-left: 12px; }
-        .see-all { font-size: 13px; color: #ff9bb5; cursor: pointer; font-weight: 600; }
-        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 0 20px; }
-        .movie-card { background: rgba(18, 17, 28, 0.8); backdrop-filter: blur(12px); border-radius: 28px; overflow: hidden; border: 1px solid rgba(255, 100, 140, 0.3); cursor: pointer; transition: 0.2s; }
-        .movie-card:active { transform: scale(0.97); }
-        .card-media { position: relative; height: 140px; }
-        .card-media img { width: 100%; height: 100%; object-fit: cover; filter: blur(12px); }
-        .card-badge { position: absolute; top: 12px; right: 12px; background: linear-gradient(145deg, #ff3366, #ff884d); padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: 800; }
-        .card-info { padding: 14px 12px 12px; }
-        .card-title { font-weight: 800; display: flex; justify-content: space-between; }
-        .card-stats { display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; font-weight: 600; color: #bbaad0; }
-        .vip-pass { background: linear-gradient(115deg, #1a142f, #0f0b1f); margin: 32px 20px; border-radius: 48px; padding: 24px 20px; border: 2px solid #ffbc6e; cursor: pointer; text-align: center; }
-        .pass-glow { font-size: 34px; font-weight: 900; background: linear-gradient(135deg, #FEE190, #FFB347, #FF6B8B); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .live-row { display: flex; gap: 18px; margin: 0 20px 30px; }
-        .live-card { flex: 1; background: #131129; border-radius: 32px; padding: 12px; border: 1px solid #ff678a; cursor: pointer; }
-        .live-preview { width: 100%; height: 110px; object-fit: cover; border-radius: 24px; filter: blur(9px); }
-        .live-badge-red { background: #e02b4b; display: inline-block; padding: 4px 14px; border-radius: 50px; font-size: 11px; font-weight: 800; margin-top: 8px; }
-        .hot-links-cinema { display: flex; flex-wrap: wrap; gap: 14px; margin: 30px 20px 25px; }
-        .hot-cinema { flex: 1 1 42%; background: #15122a; padding: 16px 8px; border-radius: 44px; text-align: center; font-weight: 700; border-bottom: 4px solid #ff7b9c; cursor: pointer; }
-        .double-special { display: flex; gap: 18px; margin: 20px 20px 30px; }
-        .special-offer { flex: 1; background: #120f22; border-radius: 36px; padding: 20px 12px; text-align: center; border: 1px solid #ff7b9c; cursor: pointer; }
-        .footer-cinema { text-align: center; padding: 28px; background: #0a0914; border-top: 1px solid #ff608030; font-size: 11px; margin-top: 20px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>বিজ্ঞাপন দেখুন</title>
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #ad-counter {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 25px;
+      display: inline-block;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      color: #555;
+    }
+    .ad-container {
+      background: #fff;
+      padding: 40px 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+      max-width: 450px;
+      width: 100%;
+      animation: slideUp 0.4s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .ad-container h2 {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+      color: #2d3748;
+    }
+    .ad-container p {
+      color: #718096;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .btn {
+      padding: 14px 28px;
+      margin: 10px 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      width: 100%;
+      max-width: 300px;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+    .btn-success { background: linear-gradient(135deg, #28a745, #20c997); color: white; display: none; }
+    .hidden { display: none !important; }
+    #ad-status {
+      margin-top: 16px;
+      font-weight: 500;
+      min-height: 24px;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .error { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
+    .success { background: #f0fff4; color: #276749; border: 1px solid #9ae6b4; }
+    .warning-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    .warning-modal.show { display: flex; }
+    .warning-content {
+      background: #fff;
+      padding: 32px 24px;
+      border-radius: 16px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: slideDown 0.3s ease;
+    }
+    .warning-icon { font-size: 3rem; margin-bottom: 16px; }
+    .warning-title { font-size: 1.3rem; font-weight: 700; color: #c53030; margin-bottom: 12px; }
+    .warning-message { color: #4a5568; margin-bottom: 24px; line-height: 1.5; white-space: pre-line; }
+    .warning-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
 <body>
-<div class="app-container">
-    <!-- AGE VERIFICATION OVERLAY with SINGLE BUTTON: "I'm 18+ Year" -->
-    <div class="age-overlay" id="ageOverlay">
-        <div class="age-card">
-            <div class="warning-icon">🔞</div>
-            <h2>AGE VERIFICATION</h2>
-            <div class="age-caption">⚠️ RESTRICTED CONTENT ⚠️</div>
-            <p class="age-warning-text">
-                📢 এই সাইটে ভিডিও দেখার জন্য আপনার বয়স অবশ্যই ১৮ বছরের বেশি হতে হবে।<br>
-                <strong>You must be at least 18 years old to access this content.</strong>
-            </p>
-            <!-- Single Button: I'm 18+ Year -->
-            <button class="verify-age-btn" id="verifyAgeBtn">
-                <span>✅</span> I'm 18+ Year
-            </button>
-            <div class="footer-note">🔞 Adult content • Verification required by law</div>
-        </div>
+
+  <div id="ad-counter">ads watching 5/1</div>
+
+  <div class="warning-modal" id="warningModal">
+    <div class="warning-content">
+      <div class="warning-icon">⚠️</div>
+      <div class="warning-title">সতর্কতা</div>
+      <div class="warning-message" id="warningMessage"></div>
+      <button class="warning-btn" onclick="closeWarning()">ঠিক আছে</button>
     </div>
+  </div>
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="film-spinner"></div>
-        <div class="loading-text">⏳ LOADING SECURE AD... PLEASE WAIT</div>
+  <div class="ad-container" id="ad-wall">
+    <h2>🔒 কন্টেন্ট লক করা আছে!</h2>
+    <p>এই কন্টেন্ট আনলক করতে নিচের বিজ্ঞাপনটি দেখুন।</p>
+
+    <button class="btn btn-primary" id="watch-ad-btn">🔓 আনলক করতে বিজ্ঞাপন দেখুন</button>
+    
+    <div id="loading-ad" class="hidden">
+      <div style="margin: 20px 0;">
+        <div style="width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: #667eea; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+      </div>
+      বিজ্ঞাপন লোড হচ্ছে...
     </div>
-
-    <!-- Main Content (hidden until age verification + ad watched) -->
-    <div class="content-hidden" id="mainContent">
-        <div class="stream-header">
-            <div class="logo-premium">🎥 CINEMA<span style="color:#ff6b8b;"> PREMIUM</span></div>
-            <div class="badge-4k">4K ULTRA HD</div>
-        </div>
-
-        <div class="featured-movie" id="heroBlur">
-            <div class="featured-img">
-                <img src="https://i.ibb.co.com/Xk6JGmP6/dark-theme-of-video-player-window-in-a-night-mode.jpg" alt="featured" onerror="this.src='https://placehold.co/600x400/1e1a2e/ff88aa?text=PREMIERE'">
-                <div class="featured-overlay">
-                    <div class="play-circle">▶</div>
-                    <div class="featured-title">NOW STREAMING</div>
-                </div>
-                <div class="movie-meta" id="heroStats">
-                    <span>🔥 <span id="heroViews">৪.১</span>M views</span>
-                    <span>⭐ <span id="heroLikes">৮৫২</span>K</span>
-                    <span>💬 <span id="heroComments">২১৪</span>K</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="cat-scroll">
-            <div class="cat-item" id="pill1">🎬 ACTION</div>
-            <div class="cat-item" id="pill2">🔥 BOLLYWOOD</div>
-            <div class="cat-item" id="pill3">💋 ROMANCE 18+</div>
-            <div class="cat-item" id="pill4">🎥 EXCLUSIVE</div>
-            <div class="cat-item" id="pill5">🌙 WEBCAM</div>
-            <div class="cat-item" id="pill6">📀 4K COLLECTION</div>
-        </div>
-
-        <div class="section-row"><h3>⚡ TRENDING NOW</h3><span class="see-all" id="viewAllTrending">ALL MOVIES ›</span></div>
-        <div class="movie-grid" id="trendingGrid">
-            <div class="movie-card" id="trend1" data-link="https://omg10.com/4/9722284">
-                <div class="card-media"><img src="https://i.imgur.com/5vzBNBz.jpeg"><span class="card-badge">HDR</span></div>
-                <div class="card-info"><div class="card-title"><span>🔞 College Diaries</span><span>★ <span class="rating1">4.8</span></span></div><div class="card-stats"><span>👁 <span class="view1">৭৮৯</span>K</span><span>❤️ <span class="like1">৫৬</span>K</span><span>💬 <span class="comment1">২৩</span>K</span></div></div>
-            </div>
-            <div class="movie-card" id="trend2" data-link="https://www.profitablecpmratenetwork.com/y8snwnaf?key=d4e1607a948995f2b44623fcdccb1aca">
-                <div class="card-media"><img src="https://i.imgur.com/ZnFW6E2.jpeg"><span class="card-badge">NEW</span></div>
-                <div class="card-info"><div class="card-title"><span>💋 Wedding Night</span><span>★ <span class="rating2">4.9</span></span></div><div class="card-stats"><span>👁 <span class="view2">১.২</span>M</span><span>❤️ <span class="like2">৮৯</span>K</span><span>💬 <span class="comment2">৪৫</span>K</span></div></div>
-            </div>
-            <div class="movie-card" id="trend3" data-link="https://omg10.com/4/9722283">
-                <div class="card-media"><img src="https://i.imgur.com/UiW5o8Z.jpeg"><span class="card-badge">VIRAL</span></div>
-                <div class="card-info"><div class="card-title"><span>👄 Hotel Room</span><span>★ <span class="rating3">4.7</span></span></div><div class="card-stats"><span>👁 <span class="view3">৫৬৫</span>K</span><span>❤️ <span class="like3">৪২</span>K</span><span>💬 <span class="comment3">১৮</span>K</span></div></div>
-            </div>
-            <div class="movie-card" id="trend4" data-link="https://www.profitablecpmratenetwork.com/yk2urd6mbi?key=4b5b863ee584d2aa79fd144089d8117e">
-                <div class="card-media"><img src="https://i.imgur.com/R0XQv0T.jpeg"><span class="card-badge">EXCLUSIVE</span></div>
-                <div class="card-info"><div class="card-title"><span>🎭 Secretary Affair</span><span>★ <span class="rating4">4.9</span></span></div><div class="card-stats"><span>👁 <span class="view4">৯৯২</span>K</span><span>❤️ <span class="like4">৭৩</span>K</span><span>💬 <span class="comment4">৩১</span>K</span></div></div>
-            </div>
-            <div class="movie-card" id="trend5" data-link="https://omg10.com/4/9809282">
-                <div class="card-media"><img src="https://i.imgur.com/sG7QqGh.jpeg"><span class="card-badge">HOT</span></div>
-                <div class="card-info"><div class="card-title"><span>💦 Massage Center</span><span>★ <span class="rating5">4.6</span></span></div><div class="card-stats"><span>👁 <span class="view5">৩৪৫</span>K</span><span>❤️ <span class="like5">২৮</span>K</span><span>💬 <span class="comment5">১২</span>K</span></div></div>
-            </div>
-            <div class="movie-card" id="trend6" data-link="https://www.profitablecpmratenetwork.com/jawa6v2m?key=110abe83a2938c0a9a850051443455d9">
-                <div class="card-media"><img src="https://i.imgur.com/KLh6VhO.jpeg"><span class="card-badge">ULTRA 4K</span></div>
-                <div class="card-info"><div class="card-title"><span>👙 Hostel Nights</span><span>★ <span class="rating6">4.8</span></span></div><div class="card-stats"><span>👁 <span class="view6">৮৮২</span>K</span><span>❤️ <span class="like6">৬৪</span>K</span><span>💬 <span class="comment6">২৭</span>K</span></div></div>
-            </div>
-        </div>
-
-        <div class="vip-pass" id="vipBanner" data-link="https://omg10.com/4/9809281">
-            <span style="background:#f5b64240; padding:6px 18px; border-radius:40px; font-size:12px;">⭐ LIMITED PASS</span>
-            <div class="pass-glow" style="margin:16px 0;">UNLIMITED CINEMA PASS</div>
-            <div style="background: #00000060; border-radius: 40px; padding:12px; font-weight:800;">🚀 80% OFF — JOIN TODAY</div>
-            <p style="margin-top:14px; font-size:12px;" id="vipViewer">১২.৪K members joined</p>
-        </div>
-
-        <div class="section-row"><h3>🔴 LIVE NOW</h3><span class="see-all" id="viewAllLive">ALL STREAMS ›</span></div>
-        <div class="live-row">
-            <div class="live-card" id="live1" data-link="https://www.profitablecpmratenetwork.com/qsdatte80?key=7f6b8506c12d165a36236a5b7996001c">
-                <img class="live-preview" src="https://i.imgur.com/jUvXU8r.jpeg">
-                <div class="live-badge-red">🔴 LIVE</div>
-                <p style="font-weight:800; margin-top:10px;">Hot Jessica</p>
-                <div><span id="live1Viewers">২.৮K watching</span> ❤️ <span id="live1Likes">১২.৪</span>K</div>
-            </div>
-            <div class="live-card" id="live2" data-link="https://omg10.com/4/9722284">
-                <img class="live-preview" src="https://i.imgur.com/JH1cVWv.jpeg">
-                <div class="live-badge-red">🔴 LIVE</div>
-                <p style="font-weight:800; margin-top:10px;">Priya X</p>
-                <div><span id="live2Viewers">১.৯K watching</span> ❤️ <span id="live2Likes">৮.৭</span>K</div>
-            </div>
-        </div>
-
-        <div class="hot-links-cinema">
-            <div class="hot-cinema" id="hotlink1" data-link="https://omg10.com/4/9722283">🎞️ PRIVATE COLLECTION</div>
-            <div class="hot-cinema" id="hotlink2" data-link="https://omg10.com/4/9429975">📹 REQUEST MOVIE</div>
-                <div class="hot-cinema" id="hotlink3" data-link="https://omg10.com/4/9809282">🎧 AUDIO CLIPS</div>
-            <div class="hot-cinema" id="hotlink4" data-link="https://www.profitablecpmratenetwork.com/yk2urd6mbi?key=4b5b863ee584d2aa79fd144089d8117e">📸 EXCLUSIVE PHOTOS</div>
-            <div class="hot-cinema" id="hotlink5" data-link="https://www.profitablecpmratenetwork.com/y8snwnaf?key=d4e1607a948995f2b44623fcdccb1aca">🎮 INTERACTIVE</div>
-            <div class="hot-cinema" id="hotlink6" data-link="https://www.profitablecpmratenetwork.com/jawa6v2m?key=110abe83a2938c0a9a850051443455d9">💎 VIP GROUP</div>
-        </div>
-
-        <div class="double-special">
-            <div class="special-offer" id="special1" data-link="https://www.profitablecpmratenetwork.com/qsdatte80?key=7f6b8506c12d165a36236a5b7996001c"><span style="font-size:34px;">🎁</span><h3>FREE TRIAL</h3><span id="trialTimer">24h left</span></div>
-            <div class="special-offer" id="special2" data-link="https://www.profitablecpmratenetwork.com/yk2urd6mbi?key=4b5b863ee584d2aa79fd144089d8117e"><span style="font-size:34px;">💘</span><h3>MATCH & DATE</h3><span id="matchCount">১২৩ online</span></div>
-        </div>
-        <div class="footer-cinema">
-            🎬 18+ CINEMA PREMIUM • 4K STREAMING<br>
-            <span style="color:#ff7b9c;">UNLIMITED ACCESS | HD QUALITY</span>
-        </div>
-    </div>
-</div>
-
-<script>
-    // ========== CONFIGURATION ==========
-    const ADSGRAM_BLOCK_ID = "int-27313";    // Main zone ID for verification ad (Auto ad on entry)
-    const REDIRECT_TELEGRAM_URL = "https://t.me/final_hub_bot?startapp";   // Redirect after ad close OR 13 seconds auto
     
-    // DOM elements
-    const ageOverlay = document.getElementById('ageOverlay');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const mainContent = document.getElementById('mainContent');
-    const verifyBtn = document.getElementById('verifyAgeBtn');
+    <button class="btn btn-success" id="unlocked-btn">✅ সফলভাবে আনলক হয়েছে!</button>
     
-    let isUnlocked = false;
-    let adCompleted = false;
-    let redirectTimer = null;
-    
-    // Function to show Adsgram ad and wait for completion (or timeout fallback)
-    function showMandatoryAd() {
-        return new Promise((resolve) => {
-            if (typeof Adsgram === 'undefined' || !Adsgram.init) {
-                console.warn("Adsgram not loaded, fallback redirect after 15 sec");
-                // If no Adsgram, still wait 13 sec and resolve
-                setTimeout(() => resolve(true), 15000);
-                return;
-            }
-            try {
-                const AdController = Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
-                AdController.show().then(() => {
-                    console.log("Ad completed by user interaction");
-                    resolve(true);
-                }).catch((err) => {
-                    console.error("Ad error or user closed:", err);
-                    // Even if error or closed, resolve and redirect
-                    resolve(true);
-                });
-                
-                // Safety timeout: Even if ad never resolves, force redirect after 15 seconds
-                setTimeout(() => {
-                    console.log("Ad safety timeout triggered");
-                    resolve(true);
-                }, 15000);
-                
-            } catch(e) {
-                console.error("Adsgram exception:", e);
-                resolve(true);
-            }
+    <div id="ad-status"></div>
+  </div>
+
+  <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+  <script>
+    const BLOCK_ID = "int-27313";
+    const NEXT_PAGE = "https://t.me/final_hub_bot/app"; // বা আপনার Telegram Mini App লিংক
+    const MIN_WATCH_SEC = 9;
+    const AUTO_REDIRECT_SEC = 15;
+
+    const watchAdBtn = document.getElementById('watch-ad-btn');
+    const loadingAd = document.getElementById('loading-ad');
+    const unlockedBtn = document.getElementById('unlocked-btn');
+    const adStatus = document.getElementById('ad-status');
+    const warningModal = document.getElementById('warningModal');
+    const warningMessage = document.getElementById('warningMessage');
+
+    let adWatched = false;
+    let AdController = null;
+    let adStartTime = null;
+    let autoRedirectTimer = null;
+
+    function triggerAdWarning(message) {
+      adStatus.textContent = message;
+      adStatus.className = 'error';
+      warningMessage.textContent = message;
+      warningModal.classList.add('show');
+      console.warn("[AdsGram] Warning:", message);
+    }
+
+    function closeWarning() {
+      warningModal.classList.remove('show');
+    }
+
+    warningModal.addEventListener('click', (e) => {
+      if (e.target === warningModal) closeWarning();
+    });
+
+    function showAdsGramAd() {
+      if (adWatched) return;
+
+      try {
+        AdController = window.Adsgram.init({ blockId: BLOCK_ID });
+      } catch (initError) {
+        triggerAdWarning("AdsGram লোড হয়নি। দয়া করে Ad Blocker বন্ধ করুন।");
+        return;
+      }
+
+      watchAdBtn.classList.add('hidden');
+      loadingAd.classList.remove('hidden');
+      adStatus.textContent = '';
+      adStatus.className = '';
+      adStartTime = Date.now();
+
+      autoRedirectTimer = setTimeout(() => {
+        if (!adWatched) {
+          adWatched = true;
+          adStatus.textContent = "⏱️ সময় শেষ! পরবর্তী পেজে যাচ্ছে...";
+          adStatus.className = 'success';
+          setTimeout(() => { window.location.href = NEXT_PAGE; }, 500);
+        }
+      }, AUTO_REDIRECT_SEC * 1000);
+
+      AdController.show()
+        .then((result) => {
+          clearTimeout(autoRedirectTimer);
+          const watchDuration = (Date.now() - adStartTime) / 1000;
+
+          if (watchDuration < MIN_WATCH_SEC) {
+            loadingAd.classList.add('hidden');
+            watchAdBtn.classList.remove('hidden');
+            triggerAdWarning(`⚠️ বিজ্ঞাপন খুব তাড়াতাড়ি বন্ধ করা হয়েছে!\nঅনুগ্রহ করে অন্তত ${MIN_WATCH_SEC} সেকেন্ড দেখুন।`);
+            adStartTime = null;
+            return;
+          }
+
+          loadingAd.classList.add('hidden');
+          adWatched = true;
+          adStatus.textContent = "✅ বিজ্ঞাপন সম্পন্ন! পরবর্তী পেজে যাচ্ছে...";
+          adStatus.className = 'success';
+          
+          setTimeout(() => {
+            window.location.href = NEXT_PAGE;
+          }, 800);
+        })
+        .catch((error) => {
+          clearTimeout(autoRedirectTimer);
+          loadingAd.classList.add('hidden');
+          watchAdBtn.classList.remove('hidden');
+          const errorMsg = error?.message || "কোনো বিজ্ঞাপন পাওয়া যায়নি বা লোড হয়নি";
+          triggerAdWarning(errorMsg);
+          adStartTime = null;
         });
     }
-    
-    // Function to handle redirect after ad/site load
-    function redirectToTelegram() {
-        if (redirectTimer) clearTimeout(redirectTimer);
-        window.location.href = REDIRECT_TELEGRAM_URL;
-    }
-    
-    // Main verification flow: show ad (auto on entry), then after completion OR 13 sec -> redirect
-    async function handleAutoAdAndRedirect() {
-        if (isUnlocked) return; // safety
-        
-        // Show loading immediately
-        loadingOverlay.classList.add('show');
-        
-        // Start 13 seconds auto-redirect timer (strict 13 sec)
-        redirectTimer = setTimeout(() => {
-            if (!adCompleted) {
-                console.log("13 seconds passed, auto redirecting to Telegram bot");
-                redirectToTelegram();
-            } else {
-                console.log("Ad completed already, redirecting immediately");
-                redirectToTelegram();
-            }
-        }, 15000);
-        
-        // Show mandatory ad
-        await showMandatoryAd();
-        adCompleted = true;
-        
-        // If ad completes (close/complete) before 13 sec timer, we redirect immediately
-        if (redirectTimer) {
-            clearTimeout(redirectTimer);
-            redirectTimer = null;
-        }
-        
-        // Hide loading overlay if visible
-        loadingOverlay.classList.remove('show');
-        
-        // Mark unlocked to prevent double flow, but we will redirect anyway.
-        isUnlocked = true;
-        
-        // Immediately redirect to Telegram bot
-        redirectToTelegram();
-    }
-    
-    // On page load, we don't wait for any button click — show ad + redirect automatically.
-    // But we still keep the age verification overlay for design purposes, but we auto-trigger ad flow on page load.
-    // However, we can hide age overlay once ad flow triggers? But we need to keep the same behavior:
-    // "সাইটে প্রবেশ করলেই যে adsgram এর জোন আইডি থেকে অটো এড শো করে, আর এডটি ক্লোজ করলে বা ১৩ সেকেন্ড পর যেন অটোমেটিক example telegram bot লিংকে রিডাইরেক্ট করে"
-    // So we don't rely on 18+ button at all. The age overlay can be optionally hidden/removed but we show it only for design, but the redirect happens anyway.
-    // But the requirement says: "সাইটের অন্য কিছু পরিবর্তন করবেন না" so we keep the 18+ overlay but ignore its click? Actually no, we need to trigger ad on page load, not on button.
-    // We'll keep the overlay visible, but the ad will start automatically on load, and after ad closed OR 13 sec, redirects. So user doesn't need to press anything.
-    // That's fully automatic. But to respect the age verification illusion, we don't modify its design.
-    
-    // On window load, trigger the auto ad flow
+
+    watchAdBtn.addEventListener('click', showAdsGramAd);
+
     window.addEventListener('load', () => {
-        // Slight delay to let UI render
-        setTimeout(() => {
-            handleAutoAdAndRedirect();
-        }, 500);
+      if (typeof window.Adsgram === 'undefined') {
+        triggerAdWarning("AdsGram SDK লোড হয়নি। দয়া করে Ad Blocker বন্ধ করুন।");
+      }
     });
-    
-    // Expand Telegram WebApp if available
-    if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
-    }
-    
-    // Optional: Keep dynamic stats functions but they won't be used since redirect happens fast
-    // No need to attach click listeners for redirection because main content is not displayed before redirect.
-    // But we can keep them for consistency but they won't be used due to immediate redirect.
-    function generateRealisticStats() { /* dummy */ }
-    function startAutoStatsUpdate() { /* dummy */ }
-    function attachAllContentListeners() { /* dummy */ }
-</script>
+  </script>
+
 </body>
 </html>
