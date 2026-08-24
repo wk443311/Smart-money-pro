@@ -37,22 +37,9 @@
       box-shadow: 0 10px 40px rgba(0,0,0,0.25);
       max-width: 450px;
       width: 100%;
-      animation: slideUp 0.4s ease;
     }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .ad-container h2 {
-      font-size: 1.8rem;
-      margin-bottom: 16px;
-      color: #2d3748;
-    }
-    .ad-container p {
-      color: #718096;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
+    .ad-container h2 { font-size: 1.8rem; margin-bottom: 16px; color: #2d3748; }
+    .ad-container p { color: #718096; margin-bottom: 24px; line-height: 1.5; }
     .btn {
       padding: 14px 28px;
       margin: 10px 5px;
@@ -64,33 +51,13 @@
       transition: all 0.2s;
       width: 100%;
       max-width: 300px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
     }
-    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-primary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
     .hidden { display: none !important; }
-    #ad-status {
-      margin-top: 16px;
-      font-weight: 500;
-      min-height: 24px;
-      padding: 8px 12px;
-      border-radius: 8px;
-    }
+    #ad-status { margin-top: 16px; font-weight: 500; min-height: 24px; padding: 8px 12px; border-radius: 8px; }
     .error { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
     .success { background: #f0fff4; color: #276749; border: 1px solid #9ae6b4; }
-    
-    .warning-modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center;
-    }
-    .warning-modal.show { display: flex; }
-    .warning-content {
-      background: #fff; padding: 32px 24px; border-radius: 16px; max-width: 400px; width: 90%; text-align: center;
-    }
-    .warning-btn {
-      background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none;
-      padding: 12px 32px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;
-    }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -98,20 +65,11 @@
 
   <div id="ad-counter">ads watching 5/1</div>
 
-  <div class="warning-modal" id="warningModal">
-    <div class="warning-content">
-      <div style="font-size:3rem">⚠️</div>
-      <div style="font-weight:700; color:#c53030; margin-bottom:12px">সতর্কতা</div>
-      <div id="warningMessage"></div>
-      <button class="warning-btn" onclick="closeWarning()">ঠিক আছে</button>
-    </div>
-  </div>
-
   <div class="ad-container" id="ad-wall">
     <h2>🔒 কন্টেন্ট লক করা আছে!</h2>
-    <p>এই কন্টেন্ট আনলক করতে বিজ্ঞাপনটি দেখুন।</p>
+    <p>এই কন্টেন্ট আনলক করতে নিচের বিজ্ঞাপনটি দেখুন।</p>
 
-    <button class="btn btn-primary" id="watch-ad-btn">🔓 আনলক করতে বিজ্ঞাপন দেখুন</button>
+    <button class="btn" id="watch-ad-btn">🔓 আনলক করতে বিজ্ঞাপন দেখুন</button>
     
     <div id="loading-ad" class="hidden">
       <div style="margin: 20px 0;">
@@ -131,65 +89,56 @@
     const watchAdBtn = document.getElementById('watch-ad-btn');
     const loadingAd = document.getElementById('loading-ad');
     const adStatus = document.getElementById('ad-status');
-    const warningModal = document.getElementById('warningModal');
-    const warningMessage = document.getElementById('warningMessage');
 
-    let adStartTime = null;
-
-    function triggerAdWarning(message) {
-      adStatus.textContent = message;
-      adStatus.className = 'error';
-      warningMessage.textContent = message;
-      warningModal.classList.add('show');
-    }
-
-    function closeWarning() {
-      warningModal.classList.remove('show');
-      watchAdBtn.classList.remove('hidden');
-      loadingAd.classList.add('hidden');
-    }
-
-    function showAdsGramAd() {
-      if (typeof window.Adsgram === 'undefined') {
-        triggerAdWarning("AdsGram লোড হয়নি। Ad Blocker বন্ধ করুন।");
-        return;
-      }
+    function showAdsGramAd(isAuto = false) {
+      if (typeof window.Adsgram === 'undefined') return;
 
       const AdController = window.Adsgram.init({ blockId: BLOCK_ID });
       
-      watchAdBtn.classList.add('hidden');
-      loadingAd.classList.remove('hidden');
-      adStatus.textContent = '';
-      adStatus.className = '';
-      
-      adStartTime = Date.now();
+      // শুধু ম্যানুয়াল ক্লিকের ক্ষেত্রে UI পরিবর্তন হবে
+      if (!isAuto) {
+        watchAdBtn.classList.add('hidden');
+        loadingAd.classList.remove('hidden');
+        adStatus.textContent = '';
+        adStatus.className = '';
+      }
+
+      const adStartTime = Date.now();
 
       AdController.show()
         .then(() => {
           const watchDuration = (Date.now() - adStartTime) / 1000;
 
-          if (watchDuration < MIN_WATCH_SEC) {
-            triggerAdWarning(`⚠️ বিজ্ঞাপন খুব তাড়াতাড়ি বন্ধ করা হয়েছে!\nঅনুগ্রহ করে অন্তত ${MIN_WATCH_SEC} সেকেন্ড দেখুন।`);
-            adStartTime = null;
+          if (watchDuration >= MIN_WATCH_SEC) {
+            // ৮ সেকেন্ডের বেশি হলে রিডাইরেক্ট (কোনো মেসেজ ছাড়াই)
+            window.location.href = NEXT_PAGE;
           } else {
-            adStatus.textContent = "✅ সফল! রিডাইরেক্ট হচ্ছে...";
-            adStatus.className = 'success';
-            setTimeout(() => { window.location.href = NEXT_PAGE; }, 500);
+            // ৮ সেকেন্ড না দেখলে এবং ম্যানুয়াল ক্লিক হলে ওয়ার্নিং দেখাবে
+            if (!isAuto) {
+              loadingAd.classList.add('hidden');
+              watchAdBtn.classList.remove('hidden');
+              adStatus.textContent = `⚠️ অন্তত ${MIN_WATCH_SEC} সেকেন্ড দেখুন।`;
+              adStatus.className = 'error';
+            }
           }
         })
         .catch(() => {
-          triggerAdWarning("বিজ্ঞাপন পাওয়া যায়নি বা লোড হয়নি। আবার চেষ্টা করুন।");
-          adStartTime = null;
+          // এরর হলে শুধু ম্যানুয়াল ক্লিকের ক্ষেত্রে মেসেজ দিবে
+          if (!isAuto) {
+            loadingAd.classList.add('hidden');
+            watchAdBtn.classList.remove('hidden');
+            adStatus.textContent = "বিজ্ঞাপন লোড হয়নি। আবার চেষ্টা করুন।";
+            adStatus.className = 'error';
+          }
         });
     }
 
-    // বাটন ক্লিক ফাংশন
-    watchAdBtn.addEventListener('click', showAdsGramAd);
+    // বাটন ক্লিক ইভেন্ট (ম্যানুয়াল)
+    watchAdBtn.addEventListener('click', () => showAdsGramAd(false));
 
-    // সাইট লোড হওয়ার সাথে সাথে অটো এড লোড
+    // সাইট লোড হওয়ার সাথে সাথে অটো অ্যাড লোড (সাইলেন্টলি)
     window.addEventListener('load', () => {
-      // স্ক্রিপ্ট রেডি হওয়ার জন্য সামান্য মিলি-সেকেন্ড গ্যাপ রাখা ভালো
-      showAdsGramAd();
+      showAdsGramAd(true); 
     });
   </script>
 
